@@ -135,11 +135,7 @@
         }
 
         function resetGame() {
-            player.reset();
-            obstacles = [];
-            dragons = [];
-            highScore = Math.max(score, highScore);
-            score = 0;
+            window.location.reload();
         }
 
         function update() {
