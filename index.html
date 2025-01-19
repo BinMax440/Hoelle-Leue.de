@@ -116,7 +116,7 @@
         let dragonFrequency = 4000;
         let difficultyIncrement = 0.002;
         let difficultyScoreThreshold = 100; // Schwierigkeitssteigerung alle 100 Punkte
-        let elapsedTime = 0;
+        let lastDifficultyUpdateScore = 0; // Letzter Punktstand, bei dem die Schwierigkeit angepasst wurde
 
         function createObstacle() {
             const size = Math.random() * 30 + 20;
@@ -154,6 +154,7 @@
             dragonSpeed = 4;
             obstacleFrequency = 2000;
             dragonFrequency = 4000;
+            lastDifficultyUpdateScore = 0; // Reset threshold
         }
 
         function update() {
@@ -232,13 +233,11 @@
                 }
             }
 
-            // Increase difficulty when score reaches a threshold
-            if (score >= difficultyScoreThreshold) {
+            // Increase difficulty when score exceeds the threshold
+            if (score >= lastDifficultyUpdateScore + difficultyScoreThreshold) {
                 obstacleSpeed += difficultyIncrement;
                 dragonSpeed += difficultyIncrement;
-                if (obstacleFrequency > 800) obstacleFrequency -= 50;
-                if (dragonFrequency > 1500) dragonFrequency -= 50;
-                difficultyScoreThreshold += 100; // Set the next threshold
+                lastDifficultyUpdateScore = score; // Update the last difficulty update score
             }
 
             // Display score and high score
