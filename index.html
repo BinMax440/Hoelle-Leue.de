@@ -15,20 +15,50 @@
             height: 100vh;
             background-color: #f4f4f9;
             overflow: hidden;
+            flex-direction: column;
+            text-align: center;
         }
 
         canvas {
             border: 2px solid #333;
             background-color: #fff;
+            display: none;
+        }
+
+        #startButton {
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        #startButton:hover {
+            background-color: #2980b9;
+        }
+
+        #maintenanceMessage {
+            font-size: 1.2em;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
+    <div id="maintenanceMessage">
+        <h1>Website Under Maintenance</h1>
+        <p>We are currently working on updates. In the meantime, enjoy a quick game!</p>
+    </div>
+    <button id="startButton">Start Game</button>
     <canvas id="gameCanvas" width="800" height="400"></canvas>
 
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
+        const startButton = document.getElementById('startButton');
+        const maintenanceMessage = document.getElementById('maintenanceMessage');
 
         let player = {
             x: 50,
@@ -44,6 +74,7 @@
 
         let obstacles = [];
         let score = 0;
+        let gameStarted = false;
 
         function createObstacle() {
             const size = Math.random() * 30 + 20;
@@ -110,8 +141,10 @@
         }
 
         function loop() {
-            update();
-            requestAnimationFrame(loop);
+            if (gameStarted) {
+                update();
+                requestAnimationFrame(loop);
+            }
         }
 
         function jump() {
@@ -127,8 +160,14 @@
             }
         });
 
-        setInterval(createObstacle, 2000);
-        loop();
+        startButton.addEventListener('click', () => {
+            gameStarted = true;
+            maintenanceMessage.style.display = 'none';
+            startButton.style.display = 'none';
+            canvas.style.display = 'block';
+            setInterval(createObstacle, 2000);
+            loop();
+        });
     </script>
 </body>
 </html>
