@@ -28,6 +28,9 @@
         #controls {
             margin-top: 20px;
             text-align: center;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
         }
         #startButton, .controlButton {
             padding: 10px 20px;
@@ -37,7 +40,6 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin: 10px;
         }
         #startButton:hover, .controlButton:hover {
             background-color: #2980b9;
@@ -60,9 +62,6 @@
     <div id="controls">
         <button class="controlButton" id="jumpButton">Jump</button>
         <button class="controlButton" id="crouchButton">Crouch</button>
-        <h2>Controls</h2>
-        <p>Space/Touch: Jump</p>
-        <p>Arrow Down/Swipe Down: Crouch</p>
     </div>
     <script>
         const canvas = document.getElementById('gameCanvas');
