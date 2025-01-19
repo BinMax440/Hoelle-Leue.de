@@ -54,7 +54,7 @@
     <button id="startButton">Start Game</button>
     <canvas id="gameCanvas" width="800" height="400"></canvas>
 
-    <script>
+   <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     const startButton = document.getElementById('startButton');
@@ -150,8 +150,8 @@
         obstacles = [];
         dragons = [];
         score = 0;
-        obstacleSpeed = 3;
-        dragonSpeed = 4;
+        obstacleSpeed = 3; // Reset obstacle speed
+        dragonSpeed = 4; // Reset dragon speed
         obstacleFrequency = 2000;
         dragonFrequency = 4000;
         lastDifficultyUpdateScore = 0; // Reset threshold
