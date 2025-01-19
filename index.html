@@ -15,14 +15,17 @@
             height: 100vh;
             background: linear-gradient(to bottom, #87ceeb, #ffffff);
             overflow: hidden;
-            flex-direction: column;
-            text-align: center;
         }
 
         canvas {
             border: 2px solid #333;
             display: none;
             background: linear-gradient(to bottom, #87ceeb, #228b22);
+        }
+
+        #controls {
+            margin-left: 20px;
+            text-align: left;
         }
 
         #startButton {
@@ -47,277 +50,267 @@
     </style>
 </head>
 <body>
-    <div id="maintenanceMessage">
-        <h1>Hölle-Leue Spiel</h1>
-        <p>Das spiel ist noch in der entwiklung</p>
+    <div id="gameArea">
+        <div id="maintenanceMessage">
+            <h1>Hölle-Leue Spiel</h1>
+            <p>Das spiel ist noch in der entwiklung</p>
+        </div>
+        <button id="startButton">Start Game</button>
+        <canvas id="gameCanvas" width="800" height="400"></canvas>
     </div>
-    <button id="startButton">Start Game</button>
-    <canvas id="gameCanvas" width="800" height="400"></canvas>
-  <script>
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
-    const startButton = document.getElementById('startButton');
-    const maintenanceMessage = document.getElementById('maintenanceMessage');
+    <div id="controls">
+        <h2>Controls</h2>
+        <p>Space: Jump</p>
+        <p>Arrow Down: Crouch</p>
+    </div>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const startButton = document.getElementById('startButton');
+        const maintenanceMessage = document.getElementById('maintenanceMessage');
 
-    let player = {
-    x: 50,
-    y: 300,
-    width: 50,
-    height: 50,
-    dy: 0,
-    gravity: 0.3,  // Reduced gravity for longer jump duration
-    jump: -8,     // Lowered jump value to maintain height
-    grounded: false,
-    crouching: false,
-    draw() {
-        ctx.fillStyle = '#FFD700'; // Body color
-        let height = this.crouching ? this.height / 2 : this.height;
-        ctx.fillRect(this.x, this.y + (this.height - height), this.width, height);
-
-        // Mane
-        ctx.fillStyle = '#FF8C00';
-        ctx.beginPath();
-        ctx.arc(this.x + this.width / 2, this.y, this.width / 2, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Eyes
-        ctx.fillStyle = '#000';
-        ctx.beginPath();
-        ctx.arc(this.x + 15, this.y + 15, 3, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(this.x + 35, this.y + 15, 3, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Mouth
-        ctx.strokeStyle = '#000';
-        ctx.beginPath();
-        ctx.arc(this.x + this.width / 2, this.y + 30, 10, 0, Math.PI);
-        ctx.stroke();
-    },
-    reset() {
-        this.x = 50;
-        this.y = 300;
-        this.dy = 0;
-        this.grounded = false;
-        this.crouching = false;
-    }
-};
-
-    let obstacles = [];
-    let birds = [];
-    let score = 0;
-    let highScore = localStorage.getItem('highScore') ? parseInt(localStorage.getItem('highScore')) : 0;
-    let gameStarted = false;
-    let obstacleSpeed = 2; // Reduced speed to make the game easier
-    let birdSpeed = 3; // Reduced speed to make the game easier
-    let obstacleFrequency = 3000; // Increased frequency to make the game easier
-    let birdFrequency = 6000; // Increased frequency to make the game easier
-    let difficultyIncrement = 0.001; // Reduced difficulty increment
-    let difficultyScoreThreshold = 150; // Increased threshold for difficulty increment
-    let lastDifficultyUpdateScore = 0; // Letzter Punktstand, bei dem die Schwierigkeit angepasst wurde
-
-    function createObstacle() {
-        const size = Math.random() * 30 + 20;
-        const isKnight = Math.random() > 0.5; // 50% chance to be a knight
-        obstacles.push({
-            x: canvas.width,
-            y: canvas.height - size,
-            width: size,
-            height: size,
-            type: isKnight ? 'knight' : 'stone',
-            speed: obstacleSpeed
-        });
-    }
-
-    function createBird() {
-        birds.push({
-            x: canvas.width,
-            y: Math.random() * (canvas.height - 150) + 150,
-            width: 40,
-            height: 30,
-            type: 'bird',
-            speed: birdSpeed
-        });
-    }
-
-    // Function to draw pixel art
-    function drawPixelArt(ctx, x, y, width, height, type) {
-        ctx.fillStyle = '#000'; // Default color
-        switch (type) {
-            case 'stone':
-                ctx.fillStyle = '#8B4513';
-                ctx.fillRect(x, y, width, height);
-                break;
-            case 'knight':
-                ctx.fillStyle = '#C0C0C0';
-                ctx.fillRect(x, y, width, height);
-                ctx.fillStyle = '#000';
-                ctx.fillRect(x + width * 0.1, y + height * 0.1, width * 0.8, height * 0.8); // Face
+        let player = {
+            x: 50,
+            y: 300,
+            width: 50,
+            height: 50,
+            dy: 0,
+            gravity: 0.3,
+            jump: -8,
+            grounded: false,
+            crouching: false,
+            draw() {
                 ctx.fillStyle = '#FFD700';
-                ctx.fillRect(x + width * 0.2, y + height * 0.7, width * 0.6, height * 0.3); // Shield
-                break;
-            case 'bird':
-                ctx.fillStyle = '#FFD700'; // Bird body
-                ctx.fillRect(x, y, width, height); // Body
-                ctx.fillStyle = '#FF4500'; // Wings
-                ctx.fillRect(x + width * 0.2, y + height * 0.2, width * 0.6, height * 0.3); // Top wing
-                ctx.fillRect(x + width * 0.2, y + height * 0.5, width * 0.6, height * 0.3); // Bottom wing
-                ctx.fillStyle = '#000'; // Eyes
-                ctx.fillRect(x + width * 0.1, y + height * 0.2, width * 0.2, height * 0.2); // Left eye
-                ctx.fillRect(x + width * 0.7, y + height * 0.2, width * 0.2, height * 0.2); // Right eye
-                break;
-        }
-    }
+                let height = this.crouching ? this.height / 2 : this.height;
+                ctx.fillRect(this.x, this.y + (this.height - height), this.width, height);
 
-    function handleCollision() {
-        if (score > highScore) {
-            highScore = score;
-            localStorage.setItem('highScore', highScore); // Save high score in local storage
-        }
-        player.reset();
-        obstacles = [];
-        birds = [];
-        score = 0;
-        obstacleSpeed = 2; // Reset obstacle speed
-        birdSpeed = 3; // Reset bird speed
-        obstacleFrequency = 3000;
-        birdFrequency = 6000;
-        lastDifficultyUpdateScore = 0; // Reset threshold
-    }
+                ctx.fillStyle = '#FF8C00';
+                ctx.beginPath();
+                ctx.arc(this.x + this.width / 2, this.y, this.width / 2, 0, Math.PI * 2);
+                ctx.fill();
 
-    function update() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#000';
+                ctx.beginPath();
+                ctx.arc(this.x + 15, this.y + 15, 3, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(this.x + 35, this.y + 15, 3, 0, Math.PI * 2);
+                ctx.fill();
 
-        // Draw background
-        ctx.fillStyle = '#87ceeb';
-        ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
-        ctx.fillStyle = '#228b22';
-        ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
-
-        // Draw player
-        player.draw();
-
-        // Apply gravity
-        player.dy += player.gravity;
-        if (!player.crouching) player.y += player.dy;
-
-        if (player.y + player.height > canvas.height) {
-            player.y = canvas.height - player.height;
-            player.grounded = true;
-            player.dy = 0;
-        } else {
-            player.grounded = false;
-        }
-
-        // Update obstacles
-        for (let i = obstacles.length - 1; i >= 0; i--) {
-            const obstacle = obstacles[i];
-            obstacle.x -= obstacle.speed;
-
-            // Draw obstacle using pixel art
-            drawPixelArt(ctx, obstacle.x, obstacle.y, obstacle.width, obstacle.height, obstacle.type);
-
-            // Check for collision
-            if (
-                player.x < obstacle.x + obstacle.width &&
-                player.x + player.width > obstacle.x &&
-                player.y < obstacle.y + obstacle.height &&
-                player.y + player.height > obstacle.y
-            ) {
-                handleCollision();
+                ctx.strokeStyle = '#000';
+                ctx.beginPath();
+                ctx.arc(this.x + this.width / 2, this.y + 30, 10, 0, Math.PI);
+                ctx.stroke();
+            },
+            reset() {
+                this.x = 50;
+                this.y = 300;
+                this.dy = 0;
+                this.grounded = false;
+                this.crouching = false;
             }
+        };
 
-            // Remove off-screen obstacles
-            if (obstacle.x + obstacle.width < 0) {
-                obstacles.splice(i, 1);
-                score++;
-            }
+        let obstacles = [];
+        let birds = [];
+        let score = 0;
+        let highScore = localStorage.getItem('highScore') ? parseInt(localStorage.getItem('highScore')) : 0;
+        let gameStarted = false;
+        let obstacleSpeed = 2;
+        let birdSpeed = 3;
+        let obstacleFrequency = 3000;
+        let birdFrequency = 6000;
+        let difficultyIncrement = 0.001;
+        let difficultyScoreThreshold = 150;
+        let lastDifficultyUpdateScore = 0;
+
+        function createObstacle() {
+            const size = Math.random() * 30 + 20;
+            const isKnight = Math.random() > 0.5;
+            obstacles.push({
+                x: canvas.width,
+                y: canvas.height - size,
+                width: size,
+                height: size,
+                type: isKnight ? 'knight' : 'stone',
+                speed: obstacleSpeed
+            });
         }
 
-        // Update birds
-        for (let i = birds.length - 1; i >= 0; i--) {
-            const bird = birds[i];
-            bird.x -= bird.speed;
+        function createBird() {
+            birds.push({
+                x: canvas.width,
+                y: Math.random() * (canvas.height - 150) + 150,
+                width: 40,
+                height: 30,
+                type: 'bird',
+                speed: birdSpeed
+            });
+        }
 
-            // Draw bird using pixel art
-            drawPixelArt(ctx, bird.x, bird.y, bird.width, bird.height, bird.type);
-
-            // Check for collision
-            if (
-                player.x < bird.x + bird.width &&
-                player.x + player.width > bird.x &&
-                player.y < bird.y + bird.height &&
-                player.y + player.height > bird.y
-            ) {
-                handleCollision();
-            }
-
-            // Remove off-screen birds
-            if (bird.x + bird.width < 0) {
-                birds.splice(i, 1);
-                score++;
+        function drawPixelArt(ctx, x, y, width, height, type) {
+            ctx.fillStyle = '#000';
+            switch (type) {
+                case 'stone':
+                    ctx.fillStyle = '#8B4513';
+                    ctx.fillRect(x, y, width, height);
+                    break;
+                case 'knight':
+                    ctx.fillStyle = '#C0C0C0';
+                    ctx.fillRect(x, y, width, height);
+                    ctx.fillStyle = '#000';
+                    ctx.fillRect(x + width * 0.1, y + height * 0.1, width * 0.8, height * 0.8);
+                    ctx.fillStyle = '#FFD700';
+                    ctx.fillRect(x + width * 0.2, y + height * 0.7, width * 0.6, height * 0.3);
+                    break;
+                case 'bird':
+                    ctx.fillStyle = '#FFD700';
+                    ctx.fillRect(x, y, width, height);
+                    ctx.fillStyle = '#FF4500';
+                    ctx.fillRect(x + width * 0.2, y + height * 0.2, width * 0.6, height * 0.3);
+                    ctx.fillRect(x + width * 0.2, y + height * 0.5, width * 0.6, height * 0.3);
+                    ctx.fillStyle = '#000';
+                    ctx.fillRect(x + width * 0.1, y + height * 0.2, width * 0.2, height * 0.2);
+                    ctx.fillRect(x + width * 0.7, y + height * 0.2, width * 0.2, height * 0.2);
+                    break;
             }
         }
 
-        // Increase difficulty when score exceeds the threshold
-        if (score >= lastDifficultyUpdateScore + difficultyScoreThreshold) {
-            obstacleSpeed += difficultyIncrement;
-            birdSpeed += difficultyIncrement;
-            lastDifficultyUpdateScore += difficultyScoreThreshold; // Update the last difficulty update score
+        function handleCollision() {
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('highScore', highScore);
+            }
+            player.reset();
+            obstacles = [];
+            birds = [];
+            score = 0;
+            obstacleSpeed = 2;
+            birdSpeed = 3;
+            obstacleFrequency = 3000;
+            birdFrequency = 6000;
+            lastDifficultyUpdateScore = 0;
         }
 
-        // Display score and high score
-        ctx.fillStyle = '#333';
-        ctx.font = '20px Arial';
-        ctx.fillText(`Score: ${score}`, 10, 30);
-        ctx.fillText(`High Score: ${highScore}`, 10, 60);
-    }
+        function update() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    function loop() {
-        if (gameStarted) {
-            update();
-            requestAnimationFrame(loop);
+            ctx.fillStyle = '#87ceeb';
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+            ctx.fillStyle = '#228b22';
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+
+            player.draw();
+
+            player.dy += player.gravity;
+            if (!player.crouching) player.y += player.dy;
+
+            if (player.y + player.height > canvas.height) {
+                player.y = canvas.height - player.height;
+                player.grounded = true;
+                player.dy = 0;
+            } else {
+                player.grounded = false;
+            }
+
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                const obstacle = obstacles[i];
+                obstacle.x -= obstacle.speed;
+
+                drawPixelArt(ctx, obstacle.x, obstacle.y, obstacle.width, obstacle.height, obstacle.type);
+
+                if (
+                    player.x < obstacle.x + obstacle.width &&
+                    player.x + player.width > obstacle.x &&
+                    player.y < obstacle.y + obstacle.height &&
+                    player.y + player.height > obstacle.y
+                ) {
+                    handleCollision();
+                }
+
+                if (obstacle.x + obstacle.width < 0) {
+                    obstacles.splice(i, 1);
+                    score++;
+                }
+            }
+
+            for (let i = birds.length - 1; i >= 0; i--) {
+                const bird = birds[i];
+                bird.x -= bird.speed;
+
+                drawPixelArt(ctx, bird.x, bird.y, bird.width, bird.height, bird.type);
+
+                if (
+                    player.x < bird.x + bird.width &&
+                    player.x + player.width > bird.x &&
+                    player.y < bird.y + bird.height &&
+                    player.y + player.height > bird.y
+                ) {
+                    handleCollision();
+                }
+
+                if (bird.x + bird.width < 0) {
+                    birds.splice(i, 1);
+                    score++;
+                }
+            }
+
+            if (score >= lastDifficultyUpdateScore + difficultyScoreThreshold) {
+                obstacleSpeed += difficultyIncrement;
+                birdSpeed += difficultyIncrement;
+                lastDifficultyUpdateScore += difficultyScoreThreshold;
+            }
+
+            ctx.fillStyle = '#333';
+            ctx.font = '20px Arial';
+            ctx.fillText(`Score: ${score}`, 10, 30);
+            ctx.fillText(`High Score: ${highScore}`, 10, 60);
         }
-    }
 
-    function jump() {
-        if (player.grounded && !player.crouching) {
-            player.dy = player.jump;
-            player.grounded = false;
+        function loop() {
+            if (gameStarted) {
+                update();
+                requestAnimationFrame(loop);
+            }
         }
-    }
 
-    function crouch() {
-        player.crouching = !player.crouching;
-    }
-
-    function startGame() {
-        gameStarted = true;
-        maintenanceMessage.style.display = 'none';
-        startButton.style.display = 'none'; // Hide the start button
-        canvas.style.display = 'block';
-        setInterval(createObstacle, obstacleFrequency);
-        setInterval(createBird, birdFrequency);
-        loop();
-    }
-
-    startButton.addEventListener('click', startGame);
-
-    window.addEventListener('keydown', (e) => {
-        if (e.code === 'Space') {
-            jump();
+        function jump() {
+            if (player.grounded && !player.crouching) {
+                player.dy = player.jump;
+                player.grounded = false;
+            }
         }
-        if (e.code === 'ArrowDown') {
-            crouch();
-        }
-    });
 
-    window.addEventListener('keyup', (e) => {
-        if (e.code === 'ArrowDown') {
-            crouch();
+        function crouch() {
+            player.crouching = !player.crouching;
         }
-    });
-</script>
+
+        function startGame() {
+            gameStarted = true;
+            maintenanceMessage.style.display = 'none';
+            startButton.style.display = 'none';
+            canvas.style.display = 'block';
+            setInterval(createObstacle, obstacleFrequency);
+            setInterval(createBird, birdFrequency);
+            loop();
+        }
+
+        startButton.addEventListener('click', startGame);
+
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                jump();
+            }
+            if (e.code === 'ArrowDown') {
+                crouch();
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (e.code === 'ArrowDown') {
+                crouch();
+            }
+        });
+    </script>
 </body>
 </html>
