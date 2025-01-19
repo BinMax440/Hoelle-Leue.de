@@ -53,7 +53,7 @@
     </div>
     <button id="startButton">Start Game</button>
     <canvas id="gameCanvas" width="800" height="400"></canvas>
-    <script>
+   <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     const startButton = document.getElementById('startButton');
@@ -236,7 +236,7 @@
         if (score >= lastDifficultyUpdateScore + difficultyScoreThreshold) {
             obstacleSpeed += difficultyIncrement;
             dragonSpeed += difficultyIncrement;
-            lastDifficultyUpdateScore = score; // Update the last difficulty update score
+            lastDifficultyUpdateScore += difficultyScoreThreshold; // Update the last difficulty update score
         }
 
         // Display score and high score
@@ -289,6 +289,7 @@
             crouch();
         }
     });
+</script>
 </script>
 </body>
 </html>
