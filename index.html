@@ -31,6 +31,7 @@
             display: flex;
             justify-content: center;
             gap: 10px;
+            display: none; /* Hide initially */
         }
         #startButton, .controlButton {
             padding: 10px 20px;
@@ -70,6 +71,7 @@
         const maintenanceMessage = document.getElementById('maintenanceMessage');
         const jumpButton = document.getElementById('jumpButton');
         const crouchButton = document.getElementById('crouchButton');
+        const controls = document.getElementById('controls');
 
         let player = {
             x: 50,
@@ -120,8 +122,8 @@
         let score = 0;
         let highScore = localStorage.getItem('highScore') ? parseInt(localStorage.getItem('highScore')) : 0;
         let gameStarted = false;
-        let obstacleSpeed = 2;
-        let birdSpeed = 3;
+        let obstacleSpeed = 2.5; // Increase obstacle speed slightly
+        let birdSpeed = 3.5; // Increase bird speed slightly
         let obstacleFrequency = 3000;
         let birdFrequency = 6000;
         let difficultyIncrement = 0.001;
@@ -189,11 +191,12 @@
             obstacles = [];
             birds = [];
             score = 0;
-            obstacleSpeed = 2;
-            birdSpeed = 3;
+            obstacleSpeed = 2.5;
+            birdSpeed = 3.5;
             obstacleFrequency = 3000;
             birdFrequency = 6000;
             lastDifficultyUpdateScore = 0;
+            controls.style.display = 'none';
         }
 
         function update() {
@@ -290,6 +293,7 @@
             maintenanceMessage.style.display = 'none';
             startButton.style.display = 'none';
             canvas.style.display = 'block';
+            controls.style.display = 'flex'; // Show controls when game starts
             setInterval(createObstacle, obstacleFrequency);
             setInterval(createBird, birdFrequency);
             loop();
