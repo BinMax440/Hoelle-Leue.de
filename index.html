@@ -257,3 +257,40 @@
             if (player.grounded && !player.crouching) {
                 player.dy = player.jump;
                 player.grounded =
+false;
+            }
+        }
+
+        function crouch() {
+            player.crouching = !player.crouching;
+        }
+
+        function startGame() {
+            gameStarted = true;
+            maintenanceMessage.style.display = 'none';
+            canvas.style.display = 'block';
+            setInterval(createObstacle, obstacleFrequency);
+            setInterval(createDragon, dragonFrequency);
+            loop();
+        }
+
+        startButton.addEventListener('click', startGame);
+
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                jump();
+            }
+            if (e.code === 'ArrowDown') {
+                crouch();
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (e.code === 'ArrowDown') {
+                crouch();
+            }
+        });
+    </script>
+</body>
+</html>
+
