@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wartung</title>
+    <title>Website Maintenance - Mini Game</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,60 +14,121 @@
             justify-content: center;
             height: 100vh;
             background-color: #f4f4f9;
-            color: #333;
-            text-align: center;
+            overflow: hidden;
         }
 
-        .container {
-            max-width: 600px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        canvas {
+            border: 2px solid #333;
             background-color: #fff;
-            border-radius: 8px;
-        }
-
-        h1 {
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
-
-        p {
-            font-size: 1.2em;
-            margin-bottom: 20px;
-        }
-
-        .loader {
-            border: 8px solid #f4f4f9;
-            border-top: 8px solid #3498db;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px auto;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        footer {
-            margin-top: 20px;
-            font-size: 0.9em;
-            color: #777;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="loader"></div>
-        <h1>Website ist in Wartungsarbeiten</h1>
-        <p>Wir arbeiten derzeit an einigen Updates. Bitte schauen Sie später noch einmal vorbei. Vielen Dank für Ihre Geduld!</p>
-        <footer>&copy; 2025 Freiburger Hölle-Leue E.v.</footer>
-    </div>
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let player = {
+            x: 50,
+            y: 300,
+            width: 30,
+            height: 30,
+            color: '#3498db',
+            dy: 0,
+            gravity: 0.8,
+            jump: -15,
+            grounded: false
+        };
+
+        let obstacles = [];
+        let score = 0;
+
+        function createObstacle() {
+            const size = Math.random() * 30 + 20;
+            obstacles.push({
+                x: canvas.width,
+                y: canvas.height - size,
+                width: size,
+                height: size,
+                color: '#e74c3c',
+                speed: 5
+            });
+        }
+
+        function update() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw player
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+
+            // Apply gravity
+            player.dy += player.gravity;
+            player.y += player.dy;
+
+            if (player.y + player.height > canvas.height) {
+                player.y = canvas.height - player.height;
+                player.grounded = true;
+                player.dy = 0;
+            } else {
+                player.grounded = false;
+            }
+
+            // Update obstacles
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                const obstacle = obstacles[i];
+                obstacle.x -= obstacle.speed;
+
+                // Draw obstacle
+                ctx.fillStyle = obstacle.color;
+                ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+
+                // Check for collision
+                if (
+                    player.x < obstacle.x + obstacle.width &&
+                    player.x + player.width > obstacle.x &&
+                    player.y < obstacle.y + obstacle.height &&
+                    player.y + player.height > obstacle.y
+                ) {
+                    alert(`Game Over! Your score: ${score}`);
+                    document.location.reload();
+                }
+
+                // Remove off-screen obstacles
+                if (obstacle.x + obstacle.width < 0) {
+                    obstacles.splice(i, 1);
+                    score++;
+                }
+            }
+
+            // Display score
+            ctx.fillStyle = '#333';
+            ctx.font = '20px Arial';
+            ctx.fillText(`Score: ${score}`, 10, 30);
+        }
+
+        function loop() {
+            update();
+            requestAnimationFrame(loop);
+        }
+
+        function jump() {
+            if (player.grounded) {
+                player.dy = player.jump;
+                player.grounded = false;
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                jump();
+            }
+        });
+
+        setInterval(createObstacle, 2000);
+        loop();
+    </script>
 </body>
 </html>
