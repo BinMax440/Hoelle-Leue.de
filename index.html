@@ -65,8 +65,8 @@
         width: 50,
         height: 50,
         dy: 0,
-        gravity: 0.8,
-        jump: -15,
+        gravity: 0.5, // Reduced gravity to make the jump last longer
+        jump: -20, // Increased jump value for a higher jump
         grounded: false,
         crouching: false,
         draw() {
@@ -289,7 +289,6 @@
             crouch();
         }
     });
-</script>
 </script>
 </body>
 </html>
