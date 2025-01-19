@@ -109,12 +109,12 @@
     let score = 0;
     let highScore = localStorage.getItem('highScore') ? parseInt(localStorage.getItem('highScore')) : 0;
     let gameStarted = false;
-    let obstacleSpeed = 3;
-    let dragonSpeed = 4;
-    let obstacleFrequency = 2000;
-    let dragonFrequency = 4000;
-    let difficultyIncrement = 0.002;
-    let difficultyScoreThreshold = 100; // Schwierigkeitssteigerung alle 100 Punkte
+    let obstacleSpeed = 2; // Reduced speed to make the game easier
+    let dragonSpeed = 3; // Reduced speed to make the game easier
+    let obstacleFrequency = 3000; // Increased frequency to make the game easier
+    let dragonFrequency = 6000; // Increased frequency to make the game easier
+    let difficultyIncrement = 0.001; // Reduced difficulty increment
+    let difficultyScoreThreshold = 150; // Increased threshold for difficulty increment
     let lastDifficultyUpdateScore = 0; // Letzter Punktstand, bei dem die Schwierigkeit angepasst wurde
 
     function createObstacle() {
@@ -175,10 +175,10 @@
         obstacles = [];
         dragons = [];
         score = 0;
-        obstacleSpeed = 3; // Reset obstacle speed
-        dragonSpeed = 4; // Reset dragon speed
-        obstacleFrequency = 2000;
-        dragonFrequency = 4000;
+        obstacleSpeed = 2; // Reset obstacle speed
+        dragonSpeed = 3; // Reset dragon speed
+        obstacleFrequency = 3000;
+        dragonFrequency = 6000;
         lastDifficultyUpdateScore = 0; // Reset threshold
     }
 
