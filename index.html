@@ -105,14 +105,14 @@
 };
 
     let obstacles = [];
-    let dragons = [];
+    let birds = [];
     let score = 0;
     let highScore = localStorage.getItem('highScore') ? parseInt(localStorage.getItem('highScore')) : 0;
     let gameStarted = false;
     let obstacleSpeed = 2; // Reduced speed to make the game easier
-    let dragonSpeed = 3; // Reduced speed to make the game easier
+    let birdSpeed = 3; // Reduced speed to make the game easier
     let obstacleFrequency = 3000; // Increased frequency to make the game easier
-    let dragonFrequency = 6000; // Increased frequency to make the game easier
+    let birdFrequency = 6000; // Increased frequency to make the game easier
     let difficultyIncrement = 0.001; // Reduced difficulty increment
     let difficultyScoreThreshold = 150; // Increased threshold for difficulty increment
     let lastDifficultyUpdateScore = 0; // Letzter Punktstand, bei dem die Schwierigkeit angepasst wurde
@@ -130,14 +130,14 @@
         });
     }
 
-    function createDragon() {
-        dragons.push({
+    function createBird() {
+        birds.push({
             x: canvas.width,
             y: Math.random() * (canvas.height - 150) + 150,
             width: 40,
             height: 30,
-            type: 'dragon',
-            speed: dragonSpeed
+            type: 'bird',
+            speed: birdSpeed
         });
     }
 
@@ -157,11 +157,11 @@
                 ctx.fillStyle = '#FFD700';
                 ctx.fillRect(x + width * 0.2, y + height * 0.7, width * 0.6, height * 0.3); // Shield
                 break;
-            case 'dragon':
+            case 'bird':
                 ctx.fillStyle = '#228B22';
                 ctx.fillRect(x, y, width, height);
                 ctx.fillStyle = '#FF4500';
-                ctx.fillRect(x + width * 0.2, y + height * 0.2, width * 0.6, height * 0.6); // Fire
+                ctx.fillRect(x + width * 0.2, y + height * 0.2, width * 0.6, height * 0.6); // Wing
                 break;
         }
     }
@@ -173,12 +173,12 @@
         }
         player.reset();
         obstacles = [];
-        dragons = [];
+        birds = [];
         score = 0;
         obstacleSpeed = 2; // Reset obstacle speed
-        dragonSpeed = 3; // Reset dragon speed
+        birdSpeed = 3; // Reset bird speed
         obstacleFrequency = 3000;
-        dragonFrequency = 6000;
+        birdFrequency = 6000;
         lastDifficultyUpdateScore = 0; // Reset threshold
     }
 
@@ -231,27 +231,27 @@
             }
         }
 
-        // Update dragons
-        for (let i = dragons.length - 1; i >= 0; i--) {
-            const dragon = dragons[i];
-            dragon.x -= dragon.speed;
+        // Update birds
+        for (let i = birds.length - 1; i >= 0; i--) {
+            const bird = birds[i];
+            bird.x -= bird.speed;
 
-            // Draw dragon using pixel art
-            drawPixelArt(ctx, dragon.x, dragon.y, dragon.width, dragon.height, dragon.type);
+            // Draw bird using pixel art
+            drawPixelArt(ctx, bird.x, bird.y, bird.width, bird.height, bird.type);
 
             // Check for collision
             if (
-                player.x < dragon.x + dragon.width &&
-                player.x + player.width > dragon.x &&
-                player.y < dragon.y + dragon.height &&
-                player.y + player.height > dragon.y
+                player.x < bird.x + bird.width &&
+                player.x + player.width > bird.x &&
+                player.y < bird.y + bird.height &&
+                player.y + player.height > bird.y
             ) {
                 handleCollision();
             }
 
-            // Remove off-screen dragons
-            if (dragon.x + dragon.width < 0) {
-                dragons.splice(i, 1);
+            // Remove off-screen birds
+            if (bird.x + bird.width < 0) {
+                birds.splice(i, 1);
                 score++;
             }
         }
@@ -259,7 +259,7 @@
         // Increase difficulty when score exceeds the threshold
         if (score >= lastDifficultyUpdateScore + difficultyScoreThreshold) {
             obstacleSpeed += difficultyIncrement;
-            dragonSpeed += difficultyIncrement;
+            birdSpeed += difficultyIncrement;
             lastDifficultyUpdateScore += difficultyScoreThreshold; // Update the last difficulty update score
         }
 
@@ -294,7 +294,7 @@
         startButton.style.display = 'none'; // Hide the start button
         canvas.style.display = 'block';
         setInterval(createObstacle, obstacleFrequency);
-        setInterval(createDragon, dragonFrequency);
+        setInterval(createBird, birdFrequency);
         loop();
     }
 
