@@ -29,7 +29,7 @@
             margin-top: 20px;
             text-align: center;
         }
-        #startButton {
+        #startButton, .controlButton {
             padding: 10px 20px;
             font-size: 1em;
             background-color: #3498db;
@@ -37,9 +37,9 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin-top: 20px;
+            margin: 10px;
         }
-        #startButton:hover {
+        #startButton:hover, .controlButton:hover {
             background-color: #2980b9;
         }
         #maintenanceMessage {
@@ -58,6 +58,8 @@
         <canvas id="gameCanvas" width="800" height="400"></canvas>
     </div>
     <div id="controls">
+        <button class="controlButton" id="jumpButton">Jump</button>
+        <button class="controlButton" id="crouchButton">Crouch</button>
         <h2>Controls</h2>
         <p>Space/Touch: Jump</p>
         <p>Arrow Down/Swipe Down: Crouch</p>
@@ -67,6 +69,8 @@
         const ctx = canvas.getContext('2d');
         const startButton = document.getElementById('startButton');
         const maintenanceMessage = document.getElementById('maintenanceMessage');
+        const jumpButton = document.getElementById('jumpButton');
+        const crouchButton = document.getElementById('crouchButton');
 
         let player = {
             x: 50,
@@ -220,12 +224,10 @@
 
                 drawPixelArt(ctx, obstacle.x, obstacle.y, obstacle.width, obstacle.height, obstacle.type);
 
-                if (
-                    player.x < obstacle.x + obstacle.width &&
+                if (player.x < obstacle.x + obstacle.width &&
                     player.x + player.width > obstacle.x &&
                     player.y < obstacle.y + obstacle.height &&
-                    player.y + player.height > obstacle.y
-                ) {
+                    player.y + player.height > obstacle.y) {
                     handleCollision();
                 }
 
@@ -241,12 +243,10 @@
 
                 drawPixelArt(ctx, bird.x, bird.y, bird.width, bird.height, bird.type);
 
-                if (
-                    player.x < bird.x + bird.width &&
+                if (player.x < bird.x + bird.width &&
                     player.x + player.width > bird.x &&
                     player.y < bird.y + bird.height &&
-                    player.y + player.height > bird.y
-                ) {
+                    player.y + player.height > bird.y) {
                     handleCollision();
                 }
 
@@ -314,17 +314,12 @@
         });
 
         // Add touch event listeners for mobile controls
-        canvas.addEventListener('touchstart', (e) => {
-            if (gameStarted) {
-                jump();
-            }
-        });
+        jumpButton.addEventListener('touchstart', jump);
+        crouchButton.addEventListener('touchstart', crouch);
 
-        canvas.addEventListener('touchend', (e) => {
-            if (gameStarted) {
-                crouch();
-            }
-        });
+        // Add event listeners for the control buttons
+        jumpButton.addEventListener('click', jump);
+        crouchButton.addEventListener('click', crouch);
     </script>
 </body>
 </html>
