@@ -108,7 +108,7 @@
         let obstacles = [];
         let dragons = [];
         let score = 0;
-        let highScore = 0;
+        let highScore = localStorage.getItem('highScore') ? parseInt(localStorage.getItem('highScore')) : 0;
         let gameStarted = false;
         let obstacleSpeed = 3;
         let dragonSpeed = 4;
@@ -143,6 +143,7 @@
         function handleCollision() {
             if (score > highScore) {
                 highScore = score;
+                localStorage.setItem('highScore', highScore); // Save high score in local storage
             }
             player.reset();
             obstacles = [];
@@ -256,8 +257,7 @@
         function jump() {
             if (player.grounded && !player.crouching) {
                 player.dy = player.jump;
-                player.grounded =
-false;
+                player.grounded = false;
             }
         }
 
@@ -293,4 +293,3 @@ false;
     </script>
 </body>
 </html>
-
