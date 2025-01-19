@@ -79,10 +79,12 @@
             jump: -8,
             grounded: false,
             crouching: false,
+            crouchHeight: 25,
+            originalHeight: 50,
             draw() {
                 ctx.fillStyle = '#FFD700';
-                let height = this.crouching ? this.height / 2 : this.height;
-                ctx.fillRect(this.x, this.y + (this.height - height), this.width, height);
+                let height = this.crouching ? this.crouchHeight : this.height;
+                ctx.fillRect(this.x, this.y + (this.originalHeight - height), this.width, height);
 
                 ctx.fillStyle = '#FF8C00';
                 ctx.beginPath();
