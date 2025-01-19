@@ -71,9 +71,9 @@
             grounded: false,
             crouching: false,
             draw() {
-                // Draw lion-like character
                 ctx.fillStyle = '#FFD700'; // Body color
-                ctx.fillRect(this.x, this.y, this.width, this.height);
+                let height = this.crouching ? this.height / 2 : this.height;
+                ctx.fillRect(this.x, this.y + (this.height - height), this.width, height);
 
                 // Mane
                 ctx.fillStyle = '#FF8C00';
@@ -110,9 +110,12 @@
         let score = 0;
         let highScore = 0;
         let gameStarted = false;
-        let obstacleSpeed = 5;
-        let dragonSpeed = 6;
-        let difficultyIncrement = 0.01;
+        let obstacleSpeed = 3;
+        let dragonSpeed = 4;
+        let obstacleFrequency = 2000;
+        let dragonFrequency = 4000;
+        let difficultyIncrement = 0.002;
+        let elapsedTime = 0;
 
         function createObstacle() {
             const size = Math.random() * 30 + 20;
@@ -129,7 +132,7 @@
         function createDragon() {
             dragons.push({
                 x: canvas.width,
-                y: Math.random() * (canvas.height / 2),
+                y: Math.random() * (canvas.height - 150) + 150,
                 width: 40,
                 height: 30,
                 color: '#ff4500',
@@ -138,12 +141,17 @@
         }
 
         function handleCollision() {
+            if (score > highScore) {
+                highScore = score;
+            }
             player.reset();
             obstacles = [];
             dragons = [];
             score = 0;
-            obstacleSpeed = 5;
-            dragonSpeed = 6;
+            obstacleSpeed = 3;
+            dragonSpeed = 4;
+            obstacleFrequency = 2000;
+            dragonFrequency = 4000;
         }
 
         function update() {
@@ -222,9 +230,14 @@
                 }
             }
 
-            // Increase difficulty over time
-            obstacleSpeed += difficultyIncrement;
-            dragonSpeed += difficultyIncrement;
+            // Gradually increase difficulty
+            elapsedTime++;
+            if (elapsedTime % 500 === 0) {
+                obstacleSpeed += difficultyIncrement;
+                dragonSpeed += difficultyIncrement;
+                if (obstacleFrequency > 800) obstacleFrequency -= 50;
+                if (dragonFrequency > 1500) dragonFrequency -= 50;
+            }
 
             // Display score and high score
             ctx.fillStyle = '#333';
@@ -243,41 +256,4 @@
         function jump() {
             if (player.grounded && !player.crouching) {
                 player.dy = player.jump;
-                player.grounded = false;
-            }
-        }
-
-        function crouch() {
-            player.crouching = true;
-        }
-
-        function standUp() {
-            player.crouching = false;
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') {
-                jump();
-            } else if (e.code === 'ArrowDown') {
-                crouch();
-            }
-        });
-
-        document.addEventListener('keyup', (e) => {
-            if (e.code === 'ArrowDown') {
-                standUp();
-            }
-        });
-
-        startButton.addEventListener('click', () => {
-            gameStarted = true;
-            maintenanceMessage.style.display = 'none';
-            startButton.style.display = 'none';
-            canvas.style.display = 'block';
-            setInterval(createObstacle, 2000);
-            setInterval(createDragon, 4000);
-            loop();
-        });
-    </script>
-</body>
-</html>
+                player.grounded =
