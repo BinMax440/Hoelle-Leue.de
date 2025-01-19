@@ -95,12 +95,20 @@
                 ctx.beginPath();
                 ctx.arc(this.x + this.width / 2, this.y + 30, 10, 0, Math.PI);
                 ctx.stroke();
+            },
+            reset() {
+                this.x = 50;
+                this.y = 300;
+                this.dy = 0;
+                this.grounded = false;
+                this.crouching = false;
             }
         };
 
         let obstacles = [];
         let dragons = [];
         let score = 0;
+        let highScore = 0;
         let gameStarted = false;
 
         function createObstacle() {
@@ -124,6 +132,14 @@
                 color: '#ff4500',
                 speed: 6
             });
+        }
+
+        function resetGame() {
+            player.reset();
+            obstacles = [];
+            dragons = [];
+            highScore = Math.max(score, highScore);
+            score = 0;
         }
 
         function update() {
@@ -166,8 +182,7 @@
                     player.y < obstacle.y + obstacle.height &&
                     player.y + player.height > obstacle.y
                 ) {
-                    alert(`Game Over! Your score: ${score}`);
-                    document.location.reload();
+                    resetGame();
                 }
 
                 // Remove off-screen obstacles
@@ -193,8 +208,7 @@
                     player.y < dragon.y + dragon.height &&
                     player.y + player.height > dragon.y
                 ) {
-                    alert(`Game Over! Your score: ${score}`);
-                    document.location.reload();
+                    resetGame();
                 }
 
                 // Remove off-screen dragons
@@ -204,10 +218,11 @@
                 }
             }
 
-            // Display score
+            // Display score and high score
             ctx.fillStyle = '#333';
             ctx.font = '20px Arial';
             ctx.fillText(`Score: ${score}`, 10, 30);
+            ctx.fillText(`High Score: ${highScore}`, 10, 60);
         }
 
         function loop() {
