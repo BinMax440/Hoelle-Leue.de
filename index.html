@@ -65,8 +65,8 @@
         width: 50,
         height: 50,
         dy: 0,
-        gravity: 0.5, // Reverted gravity
-        jump: -20, // Reverted jump value
+        gravity: 0.5,
+        jump: -20,
         grounded: false,
         crouching: false,
         draw() {
@@ -267,6 +267,7 @@
     function startGame() {
         gameStarted = true;
         maintenanceMessage.style.display = 'none';
+        startButton.style.display = 'none'; // Hide the start button
         canvas.style.display = 'block';
         setInterval(createObstacle, obstacleFrequency);
         setInterval(createDragon, dragonFrequency);
