@@ -53,7 +53,7 @@
     </div>
     <button id="startButton">Start Game</button>
     <canvas id="gameCanvas" width="800" height="400"></canvas>
-   <script>
+  <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     const startButton = document.getElementById('startButton');
@@ -65,8 +65,8 @@
         width: 50,
         height: 50,
         dy: 0,
-        gravity: 0.5, // Reduced gravity to make the jump last longer
-        jump: -20, // Increased jump value for a higher jump
+        gravity: 0.8, // Increased gravity for faster descent
+        jump: -12, // Reduced jump value for a lower jump
         grounded: false,
         crouching: false,
         draw() {
