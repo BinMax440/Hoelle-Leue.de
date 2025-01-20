@@ -156,9 +156,9 @@
                 speed: obstacleSpeed
             };
 
-            // Sicherstellen, dass Hindernisse nicht zu nahe beieinander spawnen
+            // Sicherstellen, dass Hindernisse nicht zu nahe beieinander spawnen (Abstand 250px)
             let tooClose = obstacles.some((obstacle) => {
-                return Math.abs(obstacle.x - newObstacle.x) < 300; // Mindestabstand von 300px
+                return Math.abs(obstacle.x - newObstacle.x) < 250; // Mindestabstand von 250px
             });
 
             if (!tooClose) {
@@ -171,15 +171,12 @@
             let birdWidth = 80;
             let birdHeight = 60;
 
-            // Sicherstellen, dass der Vogel nicht mit Hindernissen überlappt und nicht zu nah ist
+            // Sicherstellen, dass Vögel nicht mit anderen Hindernissen überlappen
             do {
                 birdY = Math.random() * (canvas.height - 300) + 150;
             } while (obstacles.some(obstacle => 
                 (birdY + birdHeight > obstacle.y && birdY < obstacle.y + obstacle.height) || 
                 (birdY < obstacle.y + obstacle.height && birdY + birdHeight > obstacle.y)
-            ) || birds.some(bird => 
-                (birdY + birdHeight > bird.y && birdY < bird.y + bird.height) || 
-                (birdY < bird.y + bird.height && birdY + birdHeight > bird.y)
             ));
 
             birds.push({
@@ -188,7 +185,7 @@
                 width: birdWidth,
                 height: birdHeight,
                 type: 'bird',
-                speed: obstacleSpeed + 2
+                speed: obstacleSpeed + 2  // Erhöht die Geschwindigkeit der Vögel um 2
             });
         }
 
@@ -231,7 +228,7 @@
                     ctx.fillStyle = '#228b22'; // Grasgrün
                     ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2); // Unten (Gras)
                     break;
-                // Add more cases for different levels
+                // Weitere Level können hier hinzugefügt werden
                 default:
                     ctx.fillStyle = '#87ceeb'; // Himmelblau
                     ctx.fillRect(0, 0, canvas.width, canvas.height / 2); // Oben (Himmel)
@@ -272,21 +269,13 @@
                     obstacles.splice(i, 1);
                     let now = Date.now();
                     if (now - lastScoreTime > 1000) {
-                        score += 1; 
+                        score += 1;  // Score increases by 1 per obstacle
                         lastScoreTime = now;
                     }
                 }
 
                 if (checkCollision(player, obstacle)) {
-                    player.reset(); // Reset player on death
-                    if (score > highScore) {
-                        highScore = score;
-                    }
-                    alert("Game Over! Your score: " + score);
-                    score = 0;
-                    level = 1;
-                    obstacleSpeed = 5;
-                    updateScoreboard();
+                    resetGame();
                     return;
                 }
             }
@@ -301,26 +290,18 @@
                     birds.splice(i, 1);
                     let now = Date.now();
                     if (now - lastScoreTime > 1000) {
-                        score += 1; 
+                        score += 1;  // Score increases by 1 per bird
                         lastScoreTime = now;
                     }
                 }
 
                 if (checkCollision(player, bird)) {
-                    player.reset(); // Reset player on death
-                    if (score > highScore) {
-                        highScore = score;
-                    }
-                    alert("Game Over! Your score: " + score);
-                    score = 0;
-                    level = 1;
-                    obstacleSpeed = 5;
-                    updateScoreboard();
+                    resetGame();
                     return;
                 }
             }
 
-            if (Math.random() < 0.02) createObstacle(); 
+            if (Math.random() < 0.02) createObstacle();
             if (Math.random() < 0.01) createBird();
 
             if (score > 10 * level) {
@@ -331,21 +312,39 @@
             requestAnimationFrame(gameLoop);
         }
 
-        // Event listeners for jumping
-        document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space' && player.grounded) {
-                player.dy = player.jump;
-                player.grounded = false;
-            }
-        });
+        // Spiel zurücksetzen, wenn der Spieler stirbt
+        function resetGame() {
+            player.reset();
 
-        // Start button
+            // Score, Level und Speed zurücksetzen
+            if (score > highScore) {
+                highScore = score;
+            }
+            score = 0;
+            level = 1;
+            obstacleSpeed = 5;
+
+            updateScoreboard();
+
+            alert("Game Over! Your score: " + score);
+            gameLoop();
+        }
+
+        // Spiel starten
         startButton.addEventListener('click', () => {
-            maintenanceMessage.style.display = 'none';
             startButton.style.display = 'none';
+            maintenanceMessage.style.display = 'none';
             canvas.style.display = 'block';
             controls.style.display = 'flex';
             gameLoop();
+        });
+
+        // Sprung-Logik
+        jumpButton.addEventListener('click', () => {
+            if (player.grounded) {
+                player.dy = player.jump;
+                player.grounded = false;
+            }
         });
     </script>
 </body>
