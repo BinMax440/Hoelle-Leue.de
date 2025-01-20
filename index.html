@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Das Hölle-Leue Spiel</title>
+    <title>Hölle-Leue Spiel</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -19,7 +19,6 @@
         }
         canvas {
             border: 2px solid #333;
-            display: none;
             background: linear-gradient(to bottom, #87ceeb, #228b22);
             width: 100%;
             height: auto;
@@ -27,13 +26,11 @@
         }
         #controls {
             margin-top: 20px;
-            text-align: center;
             display: flex;
             justify-content: center;
             gap: 10px;
-            display: none;
         }
-        #startButton, .controlButton {
+        button {
             padding: 10px 20px;
             font-size: 1em;
             background-color: #3498db;
@@ -42,129 +39,81 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        #startButton:hover, .controlButton:hover {
+        button:hover {
             background-color: #2980b9;
-        }
-        #maintenanceMessage {
-            font-size: 1.2em;
-            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
     <div id="gameArea">
-        <div id="maintenanceMessage">
-            <h1>Hölle-Leue Spiel</h1>
-            <p>Das Spiel ist noch in der Entwicklung</p>
-        </div>
-        <button id="startButton">Start Game</button>
+        <h1>Hölle-Leue Spiel</h1>
         <canvas id="gameCanvas" width="800" height="400"></canvas>
     </div>
     <div id="controls">
-        <button class="controlButton" id="jumpButton">Jump</button>
-        <button class="controlButton" id="crouchButton">Crouch</button>
+        <button id="jumpButton">Jump</button>
+        <button id="crouchButton">Crouch</button>
     </div>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-        const startButton = document.getElementById('startButton');
-        const maintenanceMessage = document.getElementById('maintenanceMessage');
-        const jumpButton = document.getElementById('jumpButton');
-        const crouchButton = document.getElementById('crouchButton');
-        const controls = document.getElementById('controls');
 
+        // Bilder laden
         const stoneImage = new Image();
-        stoneImage.src = 'Spiel/Ritter/Ritter.png';
+        stoneImage.src = 'Spiel/Ritter/Ritter.png'; // Anpassen
 
         const knightImage = new Image();
-        knightImage.src = 'Spiel/Ritter/Ritter.png';
+        knightImage.src = 'Spiel/Ritter/Ritter.png'; // Anpassen
 
         const birdImage = new Image();
-        birdImage.src = 'Spiel/Greif/Greif.png';
+        birdImage.src = 'Spiel/Greif/Greif.png'; // Anpassen
 
         const playerImage = new Image();
-        playerImage.src = 'Spiel/Spieler/Spieler.png';
+        playerImage.src = 'Spiel/Spieler/Spieler.png'; // Anpassen
 
+        const imagesToLoad = [stoneImage, knightImage, birdImage, playerImage];
+        let imagesLoaded = 0;
+
+        imagesToLoad.forEach((image) => {
+            image.onload = () => {
+                imagesLoaded++;
+                if (imagesLoaded === imagesToLoad.length) {
+                    startGame();
+                }
+            };
+        });
+
+        // Spieler-Objekt
         let player = {
             x: 50,
             y: 300,
-            width: 100,
-            height: 100,
+            width: 50,
+            height: 50,
             dy: 0,
-            gravity: 0.3,
-            jump: -12,
+            gravity: 0.5,
+            jump: -10,
             grounded: false,
-            crouching: false,
-            crouchHeight: 50,
-            originalHeight: 100,
             draw() {
                 ctx.drawImage(playerImage, this.x, this.y, this.width, this.height);
-            },
-            reset() {
-                this.x = 50;
-                this.y = 300;
-                this.dy = 0;
-                this.grounded = false;
-                this.crouching = false;
             }
         };
 
+        // Hindernis-Array
         let obstacles = [];
-        let birds = [];
-        let score = 0;
-        let highScore = localStorage.getItem('highScore') ? parseInt(localStorage.getItem('highScore')) : 0;
-        let gameStarted = false;
-        let obstacleSpeed = 3.5;
-        let birdSpeed = 2.5;
-        let obstacleFrequency = 3000;
-        let birdFrequency = 6000;
-        let difficultyIncrement = 0.001;
-        let difficultyScoreThreshold = 10;
-        let lastDifficultyUpdateScore = 0;
-
-        // Parallax background layers
-        const backgroundLayer1 = new Image();
-        backgroundLayer1.src = 'background1.png'; // Example background image
-
-        const backgroundLayer2 = new Image();
-        backgroundLayer2.src = 'background2.png'; // Another background layer image
 
         function createObstacle() {
-            const size = Math.random() * 60 + 40;
-            const isKnight = Math.random() > 0.5;
+            const size = Math.random() * 40 + 40;
             obstacles.push({
                 x: canvas.width,
                 y: canvas.height - size,
                 width: size,
                 height: size,
-                type: isKnight ? 'knight' : 'stone',
-                speed: obstacleSpeed
+                type: Math.random() > 0.5 ? 'stone' : 'knight',
+                speed: 3
             });
         }
 
-        function createBird() {
-            let birdY;
-            let birdWidth = 80;
-            let birdHeight = 60;
-        
-            do {
-                birdY = Math.random() * (canvas.height - 300) + 150;
-            } while (obstacles.some(obstacle => 
-                (birdY + birdHeight > obstacle.y && birdY < obstacle.y + obstacle.height) || 
-                (birdY < obstacle.y + obstacle.height && birdY + birdHeight > obstacle.y)
-            ));
-        
-            birds.push({
-                x: canvas.width,
-                y: birdY,
-                width: birdWidth,
-                height: birdHeight,
-                type: 'bird',
-                speed: birdSpeed
-            });
-        }
-
-        function drawPixelArt(ctx, x, y, width, height, type) {
+        // Zeichnet Objekte
+        function drawPixelArt(x, y, width, height, type) {
             switch (type) {
                 case 'stone':
                     ctx.drawImage(stoneImage, x, y, width, height);
@@ -172,168 +121,79 @@
                 case 'knight':
                     ctx.drawImage(knightImage, x, y, width, height);
                     break;
-                case 'bird':
-                    ctx.drawImage(birdImage, x, y, width, height);
-                    break;
             }
         }
 
-        function handleCollision() {
-            if (score > highScore) {
-                highScore = score;
-                localStorage.setItem('highScore', highScore);
-            }
-            player.reset();
-            obstacles = [];
-            birds = [];
-            score = 0;
-            obstacleSpeed = 3.5;
-            birdSpeed = 3.5;
-            obstacleFrequency = 3000;
-            birdFrequency = 6000;
-            lastDifficultyUpdateScore = 0;
-            controls.style.display = 'none';
-        }
-
+        // Haupt-Update-Funktion
         function update() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Parallax background scrolling
-            ctx.drawImage(backgroundLayer1, 0, 0, canvas.width, canvas.height / 2);
-            ctx.drawImage(backgroundLayer2, 0, 0, canvas.width, canvas.height / 2);
+            // Hintergrund
+            ctx.fillStyle = '#87ceeb';
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+            ctx.fillStyle = '#228b22';
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
 
-            player.draw();
-
+            // Spieler-Physik
             player.dy += player.gravity;
-            if (!player.crouching) player.y += player.dy;
+            player.y += player.dy;
 
             if (player.y + player.height > canvas.height) {
                 player.y = canvas.height - player.height;
-                player.grounded = true;
                 player.dy = 0;
+                player.grounded = true;
             } else {
                 player.grounded = false;
             }
 
+            player.draw();
+
+            // Hindernisse aktualisieren
             for (let i = obstacles.length - 1; i >= 0; i--) {
                 const obstacle = obstacles[i];
                 obstacle.x -= obstacle.speed;
 
-                drawPixelArt(ctx, obstacle.x, obstacle.y, obstacle.width, obstacle.height, obstacle.type);
+                drawPixelArt(obstacle.x, obstacle.y, obstacle.width, obstacle.height, obstacle.type);
 
-                if (player.x < obstacle.x + obstacle.width &&
+                if (
+                    player.x < obstacle.x + obstacle.width &&
                     player.x + player.width > obstacle.x &&
                     player.y < obstacle.y + obstacle.height &&
-                    player.y + player.height > obstacle.y) {
-                    handleCollision();
+                    player.y + player.height > obstacle.y
+                ) {
+                    resetGame();
                 }
 
                 if (obstacle.x + obstacle.width < 0) {
                     obstacles.splice(i, 1);
-                    score++;
                 }
             }
-
-            for (let i = birds.length - 1; i >= 0; i--) {
-                const bird = birds[i];
-                bird.x -= bird.speed;
-
-                drawPixelArt(ctx, bird.x, bird.y, bird.width, bird.height, bird.type);
-
-                if (player.x < bird.x + bird.width &&
-                    player.x + player.width > bird.x &&
-                    player.y < bird.y + bird.height &&
-                    player.y + player.height > bird.y) {
-                    handleCollision();
-                }
-
-                if (bird.x + bird.width < 0) {
-                    birds.splice(i, 1);
-                    score++;
-                }
-            }
-
-            if (score >= lastDifficultyUpdateScore + difficultyScoreThreshold) {
-                obstacleSpeed += difficultyIncrement;
-                birdSpeed += difficultyIncrement;
-                lastDifficultyUpdateScore += difficultyScoreThreshold;
-            }
-
-            ctx.fillStyle = '#333';
-            ctx.font = '20px Arial';
-            ctx.fillText(`Score: ${score}`, 10, 30);
-            ctx.fillText(`High Score: ${highScore}`, 10, 60);
         }
 
+        // Reset-Funktion
+        function resetGame() {
+            obstacles = [];
+            player.y = 300;
+            player.dy = 0;
+        }
+
+        // Spiel-Loop
         function loop() {
-            if (gameStarted) {
-                update();
-                requestAnimationFrame(loop);
-            }
+            update();
+            requestAnimationFrame(loop);
         }
 
-        function jump() {
-            if (player.grounded && !player.crouching) {
+        // Steuerungen
+        document.getElementById('jumpButton').addEventListener('click', () => {
+            if (player.grounded) {
                 player.dy = player.jump;
-                player.grounded = false;
             }
-        }
-
-        function crouch() {
-            player.crouching = !player.crouching;
-        }
+        });
 
         function startGame() {
-            gameStarted = true;
-            maintenanceMessage.style.display = 'none';
-            startButton.style.display = 'none';
-            canvas.style.display = 'block';
-            controls.style.display = 'flex';
-            setInterval(createObstacle, obstacleFrequency);
-            setInterval(createBird, birdFrequency);
+            setInterval(createObstacle, 2000);
             loop();
         }
-
-        startButton.addEventListener('click', startGame);
-
-        window.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') {
-                jump();
-            }
-            if (e.code === 'ArrowDown') {
-                crouch();
-            }
-        });
-
-        window.addEventListener('keyup', (e) => {
-            if (e.code === 'ArrowDown') {
-                crouch();
-            }
-        });
-
-        jumpButton.addEventListener('touchstart', jump);
-        crouchButton.addEventListener('touchstart', crouch);
-
-        jumpButton.addEventListener('click', jump);
-        crouchButton.addEventListener('click', crouch);
-
-        const imagesLoaded = new Promise((resolve) => {
-            let loadedCount = 0;
-            const images = [stoneImage, knightImage, birdImage, playerImage, backgroundLayer1, backgroundLayer2];
-
-            images.forEach(image => {
-                image.onload = () => {
-                    loadedCount++;
-                    if (loadedCount === images.length) {
-                        resolve();
-                    }
-                };
-            });
-        });
-
-        imagesLoaded.then(() => {
-            // Start the game or perform other initializations
-        });
     </script>
 </body>
 </html>
