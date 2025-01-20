@@ -265,17 +265,16 @@
                 }
 
                 if (checkCollision(player, obstacle)) {
-                    cancelAnimationFrame(gameLoop);
-                    player.reset(); // Reset player on death
-                    if (score > highScore) {
-                        highScore = score;
-                    }
+                    // Wenn der Spieler stirbt, zurücksetzen und Spiel neu starten
                     alert("Game Over! Dein Score: " + score);
-                    score = 0;
-                    level = 1;
-                    obstacleSpeed = 5;
+                    player.reset(); // Reset the player
+                    obstacles = []; // Lösche alle Hindernisse
+                    birds = []; // Lösche alle Vögel
+                    score = 0; // Setze den Score zurück
+                    level = 1; // Setze das Level zurück
+                    obstacleSpeed = 5; // Setze die Hindernisgeschwindigkeit zurück
                     updateScoreboard();
-                    gameLoop(); // Restart game loop
+                    gameLoop(); // Neustart des Spiels
                     return;
                 }
             }
@@ -296,17 +295,16 @@
                 }
 
                 if (checkCollision(player, bird)) {
-                    cancelAnimationFrame(gameLoop);
-                    player.reset(); // Reset player on death
-                    if (score > highScore) {
-                        highScore = score;
-                    }
+                    // Wenn der Spieler stirbt, zurücksetzen und Spiel neu starten
                     alert("Game Over! Dein Score: " + score);
-                    score = 0;
-                    level = 1;
-                    obstacleSpeed = 5;
+                    player.reset(); // Reset the player
+                    obstacles = []; // Lösche alle Hindernisse
+                    birds = []; // Lösche alle Vögel
+                    score = 0; // Setze den Score zurück
+                    level = 1; // Setze das Level zurück
+                    obstacleSpeed = 5; // Setze die Hindernisgeschwindigkeit zurück
                     updateScoreboard();
-                    gameLoop(); // Restart game loop
+                    gameLoop(); // Neustart des Spiels
                     return;
                 }
             }
