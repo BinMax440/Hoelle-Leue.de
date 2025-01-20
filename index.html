@@ -139,12 +139,15 @@
             let birdY;
             let birdWidth = 80;
             let birdHeight = 60;
-
+        
             // Ensure bird does not overlap with existing obstacles
             do {
                 birdY = Math.random() * (canvas.height - 300) + 150;
-            } while (obstacles.some(obstacle => birdY + birdHeight > obstacle.y && birdY < obstacle.y + obstacle.height));
-
+            } while (obstacles.some(obstacle => 
+                (birdY + birdHeight > obstacle.y && birdY < obstacle.y + obstacle.height) || 
+                (birdY < obstacle.y + obstacle.height && birdY + birdHeight > obstacle.y)
+            ));
+        
             birds.push({
                 x: canvas.width,
                 y: birdY,
