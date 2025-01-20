@@ -161,12 +161,15 @@
             let birdWidth = 80;
             let birdHeight = 60;
 
-            // Sicherstellen, dass der Vogel nicht mit Hindernissen überlappt
+            // Sicherstellen, dass der Vogel nicht mit Hindernissen überlappt und nicht zu nah ist
             do {
                 birdY = Math.random() * (canvas.height - 300) + 150;
             } while (obstacles.some(obstacle => 
                 (birdY + birdHeight > obstacle.y && birdY < obstacle.y + obstacle.height) || 
                 (birdY < obstacle.y + obstacle.height && birdY + birdHeight > obstacle.y)
+            ) || birds.some(bird => 
+                (birdY + birdHeight > bird.y && birdY < bird.y + bird.height) || 
+                (birdY < bird.y + bird.height && birdY + birdHeight > bird.y)
             ));
 
             birds.push({
@@ -218,6 +221,7 @@
                     ctx.fillStyle = '#228b22'; // Grasgrün
                     ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2); // Unten (Gras)
                     break;
+                // Add more cases for different levels
                 default:
                     ctx.fillStyle = '#87ceeb'; // Himmelblau
                     ctx.fillRect(0, 0, canvas.width, canvas.height / 2); // Oben (Himmel)
@@ -256,25 +260,23 @@
 
                 if (obstacle.x + obstacle.width < 0) {
                     obstacles.splice(i, 1);
-                    // Score um 1 erhöhen, wenn Hindernis das Bild verlässt
                     let now = Date.now();
                     if (now - lastScoreTime > 1000) {
-                        score += 1; // Erhöht den Score nur um 1
+                        score += 1; 
                         lastScoreTime = now;
                     }
                 }
 
                 if (checkCollision(player, obstacle)) {
-                    // Wenn der Spieler stirbt, zurücksetzen und Spiel neu starten
-                    alert("Game Over! Dein Score: " + score);
-                    player.reset(); // Reset the player
-                    obstacles = []; // Lösche alle Hindernisse
-                    birds = []; // Lösche alle Vögel
-                    score = 0; // Setze den Score zurück
-                    level = 1; // Setze das Level zurück
-                    obstacleSpeed = 5; // Setze die Hindernisgeschwindigkeit zurück
+                    player.reset(); // Reset player on death
+                    if (score > highScore) {
+                        highScore = score;
+                    }
+                    alert("Game Over! Your score: " + score);
+                    score = 0;
+                    level = 1;
+                    obstacleSpeed = 5;
                     updateScoreboard();
-                    gameLoop(); // Neustart des Spiels
                     return;
                 }
             }
@@ -289,29 +291,27 @@
                     birds.splice(i, 1);
                     let now = Date.now();
                     if (now - lastScoreTime > 1000) {
-                        score += 1; // Score um 1 erhöhen
+                        score += 1; 
                         lastScoreTime = now;
                     }
                 }
 
                 if (checkCollision(player, bird)) {
-                    // Wenn der Spieler stirbt, zurücksetzen und Spiel neu starten
-                    alert("Game Over! Dein Score: " + score);
-                    player.reset(); // Reset the player
-                    obstacles = []; // Lösche alle Hindernisse
-                    birds = []; // Lösche alle Vögel
-                    score = 0; // Setze den Score zurück
-                    level = 1; // Setze das Level zurück
-                    obstacleSpeed = 5; // Setze die Hindernisgeschwindigkeit zurück
+                    player.reset(); // Reset player on death
+                    if (score > highScore) {
+                        highScore = score;
+                    }
+                    alert("Game Over! Your score: " + score);
+                    score = 0;
+                    level = 1;
+                    obstacleSpeed = 5;
                     updateScoreboard();
-                    gameLoop(); // Neustart des Spiels
                     return;
                 }
             }
 
-            // Weniger oft Hindernisse und Vögel generieren
-            if (Math.random() < 0.015) createObstacle();  // Weniger häufig Hindernisse erzeugen
-            if (Math.random() < 0.008) createBird(); // Weniger häufig Vögel erzeugen
+            if (Math.random() < 0.02) createObstacle(); 
+            if (Math.random() < 0.01) createBird();
 
             if (score > 10 * level) {
                 level++;
