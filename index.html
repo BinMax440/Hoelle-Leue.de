@@ -74,16 +74,16 @@
 
         // Bilder laden
         const stoneImage = new Image();
-        stoneImage.src = 'Spiel/Ritter/Ritter.png'; // Anpassen
+        stoneImage.src = 'Spiel/Ritter/Ritter.png';
 
         const knightImage = new Image();
-        knightImage.src = 'Spiel/Ritter/Ritter.png'; // Anpassen
+        knightImage.src = 'Spiel/Ritter/Ritter.png';
 
         const birdImage = new Image();
-        birdImage.src = 'Spiel/Greif/Greif.png'; // Anpassen
+        birdImage.src = 'Spiel/Greif/Greif.png';
 
         const playerImage = new Image();
-        playerImage.src = 'Spiel/Spieler/Spieler.png'; // Anpassen
+        playerImage.src = 'Spiel/Spieler/Spieler.png';
 
         // Bilder sind geladen
         let imagesLoaded = 0;
@@ -116,8 +116,8 @@
         // Hindernis-Array
         let obstacles = [];
         let birds = [];
-        let level = 1; // Level-Variable
-        let obstacleSpeed = 5; // Anfangsgeschwindigkeit der Hindernisse
+        let level = 1;
+        let obstacleSpeed = 5;
 
         function createObstacle() {
             const size = Math.random() * 40 + 40;
@@ -127,7 +127,7 @@
                 width: size,
                 height: size,
                 type: Math.random() > 0.5 ? 'stone' : 'knight',
-                speed: obstacleSpeed // Hindernisse bewegen sich schneller je höher das Level
+                speed: obstacleSpeed
             });
         }
 
