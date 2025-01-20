@@ -17,8 +17,14 @@
             background: linear-gradient(to bottom, #87ceeb, #ffffff);
             overflow: hidden;
         }
+        #gameArea {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
         canvas {
             border: 2px solid #333;
+            display: none;
             background: linear-gradient(to bottom, #87ceeb, #228b22);
             width: 100%;
             height: auto;
@@ -26,7 +32,7 @@
         }
         #controls {
             margin-top: 20px;
-            display: flex;
+            display: none;
             justify-content: center;
             gap: 10px;
         }
@@ -46,7 +52,11 @@
 </head>
 <body>
     <div id="gameArea">
-        <h1>Hölle-Leue Spiel</h1>
+        <div id="maintenanceMessage">
+            <h1>Hölle-Leue Spiel</h1>
+            <p>Das Spiel ist noch in der Entwicklung.</p>
+        </div>
+        <button id="startButton">Start Game</button>
         <canvas id="gameCanvas" width="800" height="400"></canvas>
     </div>
     <div id="controls">
@@ -56,28 +66,34 @@
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
+        const startButton = document.getElementById('startButton');
+        const maintenanceMessage = document.getElementById('maintenanceMessage');
+        const jumpButton = document.getElementById('jumpButton');
+        const crouchButton = document.getElementById('crouchButton');
+        const controls = document.getElementById('controls');
 
         // Bilder laden
         const stoneImage = new Image();
-        stoneImage.src = 'path/to/stone.png'; // Anpassen
+        stoneImage.src = 'Spiel/Ritter/Ritter.png'; // Anpassen
 
         const knightImage = new Image();
-        knightImage.src = 'path/to/knight.png'; // Anpassen
+        knightImage.src = 'Spiel/Ritter/Ritter.png'; // Anpassen
 
         const birdImage = new Image();
-        birdImage.src = 'path/to/bird.png'; // Anpassen
+        birdImage.src = 'Spiel/Greif/Greif.png'; // Anpassen
 
         const playerImage = new Image();
-        playerImage.src = 'path/to/player.png'; // Anpassen
+        playerImage.src = 'Spiel/Spieler/Spieler.png'; // Anpassen
 
-        const imagesToLoad = [stoneImage, knightImage, birdImage, playerImage];
+        // Bilder sind geladen
         let imagesLoaded = 0;
+        const imagesToLoad = [stoneImage, knightImage, birdImage, playerImage];
 
         imagesToLoad.forEach((image) => {
             image.onload = () => {
                 imagesLoaded++;
                 if (imagesLoaded === imagesToLoad.length) {
-                    startGame();
+                    startButton.disabled = false; // Aktiviert den Start-Button
                 }
             };
         });
@@ -198,10 +214,16 @@
             }
         });
 
-        function startGame() {
+        // Start Game Button
+        startButton.addEventListener('click', () => {
+            maintenanceMessage.style.display = 'none';
+            startButton.style.display = 'none';
+            canvas.style.display = 'block';
+            controls.style.display = 'flex';
             setInterval(createObstacle, 2000);
-            loop();
-        }
+            loop(); // Starte das Spiel
+        });
     </script>
 </body>
 </html>
+
