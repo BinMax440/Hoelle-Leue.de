@@ -345,7 +345,22 @@
                 player.dy = player.jump;
                 player.grounded = false;
             }
-        });
+        // Event listeners for jumping
+document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space' && player.grounded) {
+        player.dy = player.jump;
+        player.grounded = false;
+    }
+});
+
+// Start button
+startButton.addEventListener('click', () => {
+    maintenanceMessage.style.display = 'none';
+    startButton.style.display = 'none';
+    canvas.style.display = 'block';
+    controls.style.display = 'flex';
+    gameLoop();
+});
     </script>
 </body>
 </html>
