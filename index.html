@@ -161,7 +161,7 @@
             let birdWidth = 80;
             let birdHeight = 60;
 
-            // Ensure bird does not overlap with existing obstacles
+            // Sicherstellen, dass der Vogel nicht mit Hindernissen überlappt
             do {
                 birdY = Math.random() * (canvas.height - 300) + 150;
             } while (obstacles.some(obstacle => 
@@ -256,9 +256,10 @@
 
                 if (obstacle.x + obstacle.width < 0) {
                     obstacles.splice(i, 1);
+                    // Score um 1 erhöhen, wenn Hindernis das Bild verlässt
                     let now = Date.now();
                     if (now - lastScoreTime > 1000) {
-                        score += 10; 
+                        score += 1; // Erhöht den Score nur um 1
                         lastScoreTime = now;
                     }
                 }
@@ -269,7 +270,7 @@
                     if (score > highScore) {
                         highScore = score;
                     }
-                    alert("Game Over! Your score: " + score);
+                    alert("Game Over! Dein Score: " + score);
                     score = 0;
                     level = 1;
                     obstacleSpeed = 5;
@@ -289,7 +290,7 @@
                     birds.splice(i, 1);
                     let now = Date.now();
                     if (now - lastScoreTime > 1000) {
-                        score += 10; 
+                        score += 1; // Score um 1 erhöhen
                         lastScoreTime = now;
                     }
                 }
@@ -300,7 +301,7 @@
                     if (score > highScore) {
                         highScore = score;
                     }
-                    alert("Game Over! Your score: " + score);
+                    alert("Game Over! Dein Score: " + score);
                     score = 0;
                     level = 1;
                     obstacleSpeed = 5;
@@ -310,8 +311,9 @@
                 }
             }
 
-            if (Math.random() < 0.02) createObstacle(); 
-            if (Math.random() < 0.01) createBird();
+            // Weniger oft Hindernisse und Vögel generieren
+            if (Math.random() < 0.015) createObstacle();  // Weniger häufig Hindernisse erzeugen
+            if (Math.random() < 0.008) createBird(); // Weniger häufig Vögel erzeugen
 
             if (score > 10 * level) {
                 level++;
