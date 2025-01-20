@@ -146,14 +146,24 @@
 
         function createObstacle() {
             const size = Math.random() * 40 + 40;
-            obstacles.push({
+            let obstacleType = Math.random() > 0.5 ? 'stone' : 'knight';
+            let newObstacle = {
                 x: canvas.width,
                 y: canvas.height - size,
                 width: size,
                 height: size,
-                type: Math.random() > 0.5 ? 'stone' : 'knight',
+                type: obstacleType,
                 speed: obstacleSpeed
+            };
+
+            // Sicherstellen, dass Hindernisse nicht zu nahe beieinander spawnen
+            let tooClose = obstacles.some((obstacle) => {
+                return Math.abs(obstacle.x - newObstacle.x) < 150; // Mindestabstand von 150px
             });
+
+            if (!tooClose) {
+                obstacles.push(newObstacle);
+            }
         }
 
         function createBird() {
