@@ -244,7 +244,21 @@
             if (player.y < 0) {
                 player.y = 0;
                 player.dy = 0;
-            }
+            
+if (checkCollision(player, obstacle) || checkCollision(player, bird)) {
+    cancelAnimationFrame(gameLoop);
+    player.reset(); // Reset player on death
+    if (score > highScore) {
+        highScore = score;
+    }
+    alert("Game Over! Your score: " + score);
+    score = 0;
+    level = 1;
+    obstacleSpeed = 5;
+    updateScoreboard();
+    gameLoop(); // Restart game loop
+    return;
+}
 
             player.draw();
             updateScoreboard();
