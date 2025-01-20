@@ -48,6 +48,17 @@
         button:hover {
             background-color: #2980b9;
         }
+        #scoreBoard {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            font-size: 20px;
+            color: #333;
+            z-index: 10;
+        }
+        #scoreBoard span {
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -63,6 +74,10 @@
         <button id="jumpButton">Jump</button>
         <button id="crouchButton">Crouch</button>
     </div>
+    <div id="scoreBoard">
+        <span id="score">Score: 0</span>
+        <span id="highScore">High Score: 0</span>
+    </div>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -71,6 +86,8 @@
         const jumpButton = document.getElementById('jumpButton');
         const crouchButton = document.getElementById('crouchButton');
         const controls = document.getElementById('controls');
+        const scoreElement = document.getElementById('score');
+        const highScoreElement = document.getElementById('highScore');
 
         // Bilder laden
         const stoneImage = new Image();
@@ -102,11 +119,11 @@
         let player = {
             x: 50,
             y: 300,
-            width: 50,
-            height: 50,
+            width: 100,  // Größerer Spieler
+            height: 100, // Größerer Spieler
             dy: 0,
             gravity: 0.5,
-            jump: -10,
+            jump: -15,   // Höherer Sprung
             grounded: false,
             draw() {
                 ctx.drawImage(playerImage, this.x, this.y, this.width, this.height);
@@ -140,16 +157,26 @@
             }
         }
 
+        // Level Designs
+        function changeLevel() {
+            if (score >= 10 && score < 20) {
+                canvas.style.background = 'linear-gradient(to bottom, #ffcc00, #228b22)'; // Level 1: Goldener Himmel
+            } else if (score >= 20 && score < 30) {
+                canvas.style.background = 'linear-gradient(to bottom, #d1c4e9, #3e2723)'; // Level 2: Lila Himmel
+            } else if (score >= 30) {
+                canvas.style.background = 'linear-gradient(to bottom, #b2dfdb, #004d40)'; // Level 3: Grüne Berge
+            }
+        }
+
         // Haupt-Update-Funktion
         let score = 0;
+        let highScore = 0;
+
         function update() {
             ctx.clearRect(0, 0, canvas.width, canvas.height); // Löscht nur das Canvas
 
-            // Hintergrund
-            ctx.fillStyle = '#87ceeb'; // Himmelblau
-            ctx.fillRect(0, 0, canvas.width, canvas.height / 2); // Oben (Himmel)
-            ctx.fillStyle = '#228b22'; // Grasgrün
-            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2); // Unten (Gras)
+            // Hintergrund wechseln je nach Level
+            changeLevel();
 
             // Spieler-Physik
             player.dy += player.gravity;
@@ -184,13 +211,15 @@
                 if (obstacle.x + obstacle.width < 0) {
                     obstacles.splice(i, 1);
                     score++; // Punkte für das Überstehen von Hindernissen
+                    scoreElement.innerText = `Score: ${score}`;
                 }
             }
 
-            // Punktestand anzeigen
-            ctx.fillStyle = '#333';
-            ctx.font = '20px Arial';
-            ctx.fillText(`Score: ${score}`, 10, 30);
+            // Highscore aktualisieren
+            if (score > highScore) {
+                highScore = score;
+                highScoreElement.innerText = `High Score: ${highScore}`;
+            }
         }
 
         // Reset-Funktion
@@ -199,6 +228,8 @@
             player.y = 300;
             player.dy = 0;
             score = 0;
+            scoreElement.innerText = `Score: ${score}`;
+            changeLevel(); // Zurücksetzen des Levels
         }
 
         // Spiel-Loop
@@ -226,4 +257,5 @@
     </script>
 </body>
 </html>
+
 
