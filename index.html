@@ -158,7 +158,7 @@
 
             // Sicherstellen, dass Hindernisse nicht zu nahe beieinander spawnen
             let tooClose = obstacles.some((obstacle) => {
-                return Math.abs(obstacle.x - newObstacle.x) < 250; // Mindestabstand von 150px
+                return Math.abs(obstacle.x - newObstacle.x) < 300; // Mindestabstand von 300px
             });
 
             if (!tooClose) {
