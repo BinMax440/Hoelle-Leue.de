@@ -136,11 +136,20 @@
         }
 
         function createBird() {
+            let birdY;
+            let birdWidth = 80;
+            let birdHeight = 60;
+
+            // Ensure bird does not overlap with existing obstacles
+            do {
+                birdY = Math.random() * (canvas.height - 300) + 150;
+            } while (obstacles.some(obstacle => birdY + birdHeight > obstacle.y && birdY < obstacle.y + obstacle.height));
+
             birds.push({
                 x: canvas.width,
-                y: Math.random() * (canvas.height - 300) + 150,
-                width: 80,
-                height: 60,
+                y: birdY,
+                width: birdWidth,
+                height: birdHeight,
                 type: 'bird',
                 speed: birdSpeed
             });
