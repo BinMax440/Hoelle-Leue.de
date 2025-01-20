@@ -115,6 +115,8 @@
 
         // Hindernis-Array
         let obstacles = [];
+        let level = 1; // Level-Variable
+        let obstacleSpeed = 5; // Anfangsgeschwindigkeit der Hindernisse
 
         function createObstacle() {
             const size = Math.random() * 40 + 40;
@@ -124,7 +126,7 @@
                 width: size,
                 height: size,
                 type: Math.random() > 0.5 ? 'stone' : 'knight',
-                speed: 5 // Hindernisse sind jetzt schneller
+                speed: obstacleSpeed // Hindernisse bewegen sich schneller je höher das Level
             });
         }
 
@@ -189,6 +191,15 @@
                 }
             }
 
+            // Level-Up und Hindernis-Geschwindigkeit anpassen
+            if (score >= 10 * level) {
+                level++;
+                obstacleSpeed += 1; // Hindernisse werden schneller mit jedem Level
+                ctx.fillStyle = '#ff6347';
+                ctx.font = '20px Arial';
+                ctx.fillText(`Level: ${level}`, 10, 60);
+            }
+
             // Punktestand und Highscore anzeigen
             ctx.fillStyle = '#333';
             ctx.font = '20px Arial';
@@ -202,6 +213,8 @@
             player.y = 300;
             player.dy = 0;
             score = 0;
+            level = 1; // Level zurücksetzen
+            obstacleSpeed = 5; // Geschwindigkeit zurücksetzen
             if (score > highScore) {
                 highScore = score;
                 localStorage.setItem('highScore', highScore);
