@@ -188,29 +188,30 @@
         // Haupt-Spiel-Loop
         function gameLoop() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawBackground(level, ctx, canvas); // Draw background based on current level
             player.dy += player.gravity;
             player.y += player.dy;
-
+        
             if (player.y + player.height > canvas.height) {
                 player.y = canvas.height - player.height;
                 player.dy = 0;
                 player.grounded = true;
             }
-
+        
             if (player.y < 0) {
                 player.y = 0;
                 player.dy = 0;
             }
-
+        
             player.draw();
             showScore();
-
+        
             // Hindernisse bewegen und überprüfen
             for (let i = obstacles.length - 1; i >= 0; i--) {
                 let obstacle = obstacles[i];
                 obstacle.x -= obstacle.speed;
                 drawPixelArt(obstacle.x, obstacle.y, obstacle.width, obstacle.height, obstacle.type);
-
+        
                 // Hindernisse entfernen, die aus dem Bild laufen
                 if (obstacle.x + obstacle.width < 0) {
                     obstacles.splice(i, 1);
@@ -220,7 +221,7 @@
                         lastScoreTime = now;
                     }
                 }
-
+        
                 // Prüfen auf Kollision mit dem Spieler
                 if (checkCollision(player, obstacle)) {
                     cancelAnimationFrame(gameLoop);
@@ -228,13 +229,13 @@
                     return;
                 }
             }
-
+        
             // Vögel bewegen und überprüfen
             for (let i = birds.length - 1; i >= 0; i--) {
                 let bird = birds[i];
                 bird.x -= bird.speed;
                 drawPixelArt(bird.x, bird.y, bird.width, bird.height, bird.type);
-
+        
                 // Vögel entfernen, die aus dem Bild laufen
                 if (bird.x + bird.width < 0) {
                     birds.splice(i, 1);
@@ -244,7 +245,7 @@
                         lastScoreTime = now;
                     }
                 }
-
+        
                 // Prüfen auf Kollision mit dem Spieler
                 if (checkCollision(player, bird)) {
                     cancelAnimationFrame(gameLoop);
@@ -252,17 +253,17 @@
                     return;
                 }
             }
-
+        
             // Hindernisse und Vögel zufällig erzeugen
             if (Math.random() < 0.02) createObstacle(); 
             if (Math.random() < 0.01) createBird();
-
+        
             // Level erhöhen
             if (score > 10 * level) {
                 level++;
                 obstacleSpeed += 0.5; // Hindernisse werden schneller
             }
-
+        
             requestAnimationFrame(gameLoop);
         }
 
