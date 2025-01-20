@@ -73,6 +73,9 @@
         const crouchButton = document.getElementById('crouchButton');
         const controls = document.getElementById('controls');
 
+        const obstacleImage = new Image();
+        obstacleImage.src = 'path/to/your/image.png';
+
         let player = {
             x: 50,
             y: 300,
@@ -122,8 +125,8 @@
         let score = 0;
         let highScore = localStorage.getItem('highScore') ? parseInt(localStorage.getItem('highScore')) : 0;
         let gameStarted = false;
-        let obstacleSpeed = 3.5; // Increase obstacle speed slightly
-        let birdSpeed = 3.7; // Increase bird speed slightly
+        let obstacleSpeed = 3.5; // Increase obstacle speed
+        let birdSpeed = 3.5; // Increase bird speed
         let obstacleFrequency = 3000;
         let birdFrequency = 6000;
         let difficultyIncrement = 0.001;
@@ -155,30 +158,17 @@
         }
 
         function drawPixelArt(ctx, x, y, width, height, type) {
-            ctx.fillStyle = '#000';
             switch (type) {
                 case 'stone':
-                    ctx.fillStyle = '#8B4513';
-                    ctx.fillRect(x, y, width, height);
+                    ctx.drawImage(obstacleImage, x, y, width, height);
                     break;
-                case 'knight':
-                    ctx.fillStyle = '#C0C0C0';
-                    ctx.fillRect(x, y, width, height);
-                    ctx.fillStyle = '#000';
-                    ctx.fillRect(x + width * 0.1, y + height * 0.1, width * 0.8, height * 0.8);
-                    ctx.fillStyle = '#FFD700';
-                    ctx.fillRect(x + width * 0.2, y + height * 0.7, width * 0.6, height * 0.3);
-                    break;
-                case 'bird':
-                    ctx.fillStyle = '#FFD700';
-                    ctx.fillRect(x, y, width, height);
-                    ctx.fillStyle = '#FF4500';
-                    ctx.fillRect(x + width * 0.2, y + height * 0.2, width * 0.6, height * 0.3);
-                    ctx.fillRect(x + width * 0.2, y + height * 0.5, width * 0.6, height * 0.3);
-                    ctx.fillStyle = '#000';
-                    ctx.fillRect(x + width * 0.1, y + height * 0.2, width * 0.2, height * 0.2);
-                    ctx.fillRect(x + width * 0.7, y + height * 0.2, width * 0.2, height * 0.2);
-                    break;
+                // Füge hier weitere cases für andere Hindernisse hinzu
+                // case 'knight':
+                //     ctx.drawImage(knightImage, x, y, width, height);
+                //     break;
+                // case 'bird':
+                //     ctx.drawImage(birdImage, x, y, width, height);
+                //     break;
             }
         }
 
@@ -191,7 +181,7 @@
             obstacles = [];
             birds = [];
             score = 0;
-            obstacleSpeed = 2.5;
+            obstacleSpeed = 3.5;
             birdSpeed = 3.5;
             obstacleFrequency = 3000;
             birdFrequency = 6000;
@@ -323,6 +313,10 @@
         // Add event listeners for the control buttons
         jumpButton.addEventListener('click', jump);
         crouchButton.addEventListener('click', crouch);
+
+        obstacleImage.onload = function() {
+            // Optional: Start the game or draw the obstacle after the image is loaded
+        };
     </script>
 </body>
 </html>
