@@ -62,7 +62,6 @@
         <button id="jumpButton">Jump</button>
         <button id="crouchButton">Crouch</button>
     </div>
-    <script src="levels.js"></script>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -118,6 +117,8 @@
         let birds = [];
         let level = 1;
         let obstacleSpeed = 5;
+        let score = 0;
+        let lastScoreTime = 0;
 
         function createObstacle() {
             const size = Math.random() * 40 + 40;
@@ -177,18 +178,16 @@
                    rect1.y + rect1.height > rect2.y;
         }
 
-        // Anzeigen des letzten Scores
-        let lastScore = 0;
-        function showLastScore() {
+        // Anzeigen des Scores
+        function showScore() {
             ctx.font = '20px Arial';
             ctx.fillStyle = '#FFFFFF';
-            ctx.fillText('Last Score: ' + lastScore, 10, 30);
+            ctx.fillText('Score: ' + score, 10, 30);
         }
 
         // Haupt-Spiel-Loop
         function gameLoop() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawBackground(level, ctx, canvas);
             player.dy += player.gravity;
             player.y += player.dy;
 
@@ -204,7 +203,7 @@
             }
 
             player.draw();
-            showLastScore();
+            showScore();
 
             // Hindernisse bewegen und überprüfen
             for (let i = obstacles.length - 1; i >= 0; i--) {
@@ -215,13 +214,17 @@
                 // Hindernisse entfernen, die aus dem Bild laufen
                 if (obstacle.x + obstacle.width < 0) {
                     obstacles.splice(i, 1);
-                    lastScore += 10; // Punkte für jedes überstandene Hindernis
+                    let now = Date.now();
+                    if (now - lastScoreTime > 1000) { // Nur einmal pro Sekunde Punkte erhöhen
+                        score += 10; 
+                        lastScoreTime = now;
+                    }
                 }
 
                 // Prüfen auf Kollision mit dem Spieler
                 if (checkCollision(player, obstacle)) {
                     cancelAnimationFrame(gameLoop);
-                    alert("Game Over! Your score: " + lastScore);
+                    alert("Game Over! Your score: " + score);
                     return;
                 }
             }
@@ -235,22 +238,27 @@
                 // Vögel entfernen, die aus dem Bild laufen
                 if (bird.x + bird.width < 0) {
                     birds.splice(i, 1);
-                    lastScore += 10; // Punkte für jeden überstandenen Vogel
+                    let now = Date.now();
+                    if (now - lastScoreTime > 1000) {
+                        score += 10; 
+                        lastScoreTime = now;
+                    }
                 }
 
                 // Prüfen auf Kollision mit dem Spieler
                 if (checkCollision(player, bird)) {
                     cancelAnimationFrame(gameLoop);
-                    alert("Game Over! Your score: " + lastScore);
+                    alert("Game Over! Your score: " + score);
                     return;
                 }
             }
 
-            if (Math.random() < 0.02) createObstacle(); // Hindernis zufällig erzeugen
-            if (Math.random() < 0.01) createBird(); // Vogel zufällig erzeugen
+            // Hindernisse und Vögel zufällig erzeugen
+            if (Math.random() < 0.02) createObstacle(); 
+            if (Math.random() < 0.01) createBird();
 
             // Level erhöhen
-            if (lastScore > 100 * level) {
+            if (score > 10 * level) {
                 level++;
                 obstacleSpeed += 0.5; // Hindernisse werden schneller
             }
@@ -264,10 +272,6 @@
                 player.dy = player.jump;
                 player.grounded = false;
             }
-        });
-
-        crouchButton.addEventListener('click', () => {
-            // Spieler kann sich ducken
         });
 
         document.addEventListener('keydown', (event) => {
