@@ -314,21 +314,21 @@
 
         // Spiel zurücksetzen, wenn der Spieler stirbt
         function resetGame() {
-            player.reset();
+    player.reset();
 
-            // Score, Level und Speed zurücksetzen
-            if (score > highScore) {
-                highScore = score;
-            }
-            score = 0;
-            level = 1;
-            obstacleSpeed = 5;
+    // Score, Level und Speed zurücksetzen
+    if (score > highScore) {
+        highScore = score;
+    }
+    score = 0;
+    level = 1;
+    obstacleSpeed = 5;
 
-            updateScoreboard();
+    updateScoreboard();
 
-            alert("Game Over! Your score: " + score);
-            gameLoop();
-        }
+    // alert("Game Over! Your score: " + score); // Removed the popup
+    gameLoop();
+}
 
         // Spiel starten
         startButton.addEventListener('click', () => {
