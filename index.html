@@ -169,6 +169,14 @@
             }
         }
 
+        // Kollisionsprüfung
+        function checkCollision(rect1, rect2) {
+            return rect1.x < rect2.x + rect2.width &&
+                   rect1.x + rect1.width > rect2.x &&
+                   rect1.y < rect2.y + rect2.height &&
+                   rect1.y + rect1.height > rect2.y;
+        }
+
         // Anzeigen des letzten Scores
         let lastScore = 0;
         function showLastScore() {
@@ -209,6 +217,13 @@
                     obstacles.splice(i, 1);
                     lastScore += 10; // Punkte für jedes überstandene Hindernis
                 }
+
+                // Prüfen auf Kollision mit dem Spieler
+                if (checkCollision(player, obstacle)) {
+                    cancelAnimationFrame(gameLoop);
+                    alert("Game Over! Your score: " + lastScore);
+                    return;
+                }
             }
 
             // Vögel bewegen und überprüfen
@@ -221,6 +236,13 @@
                 if (bird.x + bird.width < 0) {
                     birds.splice(i, 1);
                     lastScore += 10; // Punkte für jeden überstandenen Vogel
+                }
+
+                // Prüfen auf Kollision mit dem Spieler
+                if (checkCollision(player, bird)) {
+                    cancelAnimationFrame(gameLoop);
+                    alert("Game Over! Your score: " + lastScore);
+                    return;
                 }
             }
 
@@ -246,6 +268,13 @@
 
         crouchButton.addEventListener('click', () => {
             // Spieler kann sich ducken
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'Space' && player.grounded) {
+                player.dy = player.jump;
+                player.grounded = false;
+            }
         });
 
         // Startbutton
