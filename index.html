@@ -185,90 +185,109 @@
             ctx.fillText('Score: ' + score, 10, 30);
         }
 
+        // Hintergrund zeichnen
+        function drawBackground(level, ctx, canvas) {
+            switch (level) {
+                case 1:
+                    ctx.fillStyle = '#87ceeb'; // Himmelblau
+                    ctx.fillRect(0, 0, canvas.width, canvas.height / 2); // Oben (Himmel)
+                    ctx.fillStyle = '#228b22'; // Grasgrün
+                    ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2); // Unten (Gras)
+                    break;
+                // Add more cases for different levels
+                default:
+                    ctx.fillStyle = '#87ceeb'; // Himmelblau
+                    ctx.fillRect(0, 0, canvas.width, canvas.height / 2); // Oben (Himmel)
+                    ctx.fillStyle = '#228b22'; // Grasgrün
+                    ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2); // Unten (Gras)
+                    break;
+            }
+        }
+
         // Haupt-Spiel-Loop
         function gameLoop() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawBackground(level, ctx, canvas); // Draw background based on current level
-    player.dy += player.gravity;
-    player.y += player.dy;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawBackground(level, ctx, canvas); // Draw background based on current level
+            player.dy += player.gravity;
+            player.y += player.dy;
 
-    if (player.y + player.height > canvas.height) {
-        player.y = canvas.height - player.height;
-        player.dy = 0;
-        player.grounded = true;
-    }
-
-    if (player.y < 0) {
-        player.y = 0;
-        player.dy = 0;
-    }
-
-    player.draw();
-    showScore();
-
-    // Move and check obstacles
-    for (let i = obstacles.length - 1; i >= 0; i--) {
-        let obstacle = obstacles[i];
-        obstacle.x -= obstacle.speed;
-        drawPixelArt(obstacle.x, obstacle.y, obstacle.width, obstacle.height, obstacle.type);
-
-        if (obstacle.x + obstacle.width < 0) {
-            obstacles.splice(i, 1);
-            let now = Date.now();
-            if (now - lastScoreTime > 1000) {
-                score += 10; 
-                lastScoreTime = now;
+            if (player.y + player.height > canvas.height) {
+                player.y = canvas.height - player.height;
+                player.dy = 0;
+                player.grounded = true;
             }
-        }
 
-        if (checkCollision(player, obstacle)) {
-            cancelAnimationFrame(gameLoop);
-            alert("Game Over! Your score: " + score);
-            return;
-        }
-    }
-
-    // Move and check birds
-    for (let i = birds.length - 1; i >= 0; i--) {
-        let bird = birds[i];
-        bird.x -= bird.speed;
-        drawPixelArt(bird.x, bird.y, bird.width, bird.height, bird.type);
-
-        if (bird.x + bird.width < 0) {
-            birds.splice(i, 1);
-            let now = Date.now();
-            if (now - lastScoreTime > 1000) {
-                score += 10; 
-                lastScoreTime = now;
+            if (player.y < 0) {
+                player.y = 0;
+                player.dy = 0;
             }
+
+            player.draw();
+            showScore();
+
+            // Move and check obstacles
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                let obstacle = obstacles[i];
+                obstacle.x -= obstacle.speed;
+                drawPixelArt(obstacle.x, obstacle.y, obstacle.width, obstacle.height, obstacle.type);
+
+                if (obstacle.x + obstacle.width < 0) {
+                    obstacles.splice(i, 1);
+                    let now = Date.now();
+                    if (now - lastScoreTime > 1000) {
+                        score += 10; 
+                        lastScoreTime = now;
+                    }
+                }
+
+                if (checkCollision(player, obstacle)) {
+                    cancelAnimationFrame(gameLoop);
+                    alert("Game Over! Your score: " + score);
+                    return;
+                }
+            }
+
+            // Move and check birds
+            for (let i = birds.length - 1; i >= 0; i--) {
+                let bird = birds[i];
+                bird.x -= bird.speed;
+                drawPixelArt(bird.x, bird.y, bird.width, bird.height, bird.type);
+
+                if (bird.x + bird.width < 0) {
+                    birds.splice(i, 1);
+                    let now = Date.now();
+                    if (now - lastScoreTime > 1000) {
+                        score += 10; 
+                        lastScoreTime = now;
+                    }
+                }
+
+                if (checkCollision(player, bird)) {
+                    cancelAnimationFrame(gameLoop);
+                    alert("Game Over! Your score: " + score);
+                    return;
+                }
+            }
+
+            if (Math.random() < 0.02) createObstacle(); 
+            if (Math.random() < 0.01) createBird();
+
+            if (score > 10 * level) {
+                level++;
+                obstacleSpeed += 0.5;
+            }
+
+            requestAnimationFrame(gameLoop);
         }
 
-        if (checkCollision(player, bird)) {
-            cancelAnimationFrame(gameLoop);
-            alert("Game Over! Your score: " + score);
-            return;
-        }
-    }
-
-    if (Math.random() < 0.02) createObstacle(); 
-    if (Math.random() < 0.01) createBird();
-
-    if (score > 10 * level) {
-        level++;
-        obstacleSpeed += 0.5;
-    }
-
-    requestAnimationFrame(gameLoop);
-}
-
-// Start button
-startButton.addEventListener('click', () => {
-    maintenanceMessage.style.display = 'none';
-    startButton.style.display = 'none';
-    canvas.style.display = 'block';
-    controls.style.display = 'flex';
-    gameLoop();
-});
+        // Start button
+        startButton.addEventListener('click', () => {
+            maintenanceMessage.style.display = 'none';
+            startButton.style.display = 'none';
+            canvas.style.display = 'block';
+            controls.style.display = 'flex';
+            gameLoop();
+        });
     </script>
 </body>
 </html>
