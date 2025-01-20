@@ -109,6 +109,12 @@
             grounded: false,
             draw() {
                 ctx.drawImage(playerImage, this.x, this.y, this.width, this.height);
+            },
+            reset() {
+                this.x = 50;
+                this.y = 300;
+                this.dy = 0;
+                this.grounded = true;
             }
         };
 
@@ -242,7 +248,9 @@
 
                 if (checkCollision(player, obstacle)) {
                     cancelAnimationFrame(gameLoop);
+                    player.reset(); // Reset player on death
                     alert("Game Over! Your score: " + score);
+                    gameLoop(); // Restart game loop
                     return;
                 }
             }
@@ -264,7 +272,9 @@
 
                 if (checkCollision(player, bird)) {
                     cancelAnimationFrame(gameLoop);
+                    player.reset(); // Reset player on death
                     alert("Game Over! Your score: " + score);
+                    gameLoop(); // Restart game loop
                     return;
                 }
             }
@@ -279,6 +289,14 @@
 
             requestAnimationFrame(gameLoop);
         }
+
+        // Event listeners for jumping
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && player.grounded) {
+                player.dy = player.jump;
+                player.grounded = false;
+            }
+        });
 
         // Start button
         startButton.addEventListener('click', () => {
