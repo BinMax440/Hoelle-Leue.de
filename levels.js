@@ -60,7 +60,6 @@ function drawBackground(level, ctx, canvas) {
             ctx.fillStyle = '#6b8e23'; // Olivgrün
             ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2); // Unten (Gras)
             break;
-        // Weitere Levels 11 bis 20
         case 11:
             ctx.fillStyle = '#adff2f'; // Grün Himmel
             ctx.fillRect(0, 0, canvas.width, canvas.height / 2); // Oben (Himmel)
