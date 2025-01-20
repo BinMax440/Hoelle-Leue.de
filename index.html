@@ -73,8 +73,17 @@
         const crouchButton = document.getElementById('crouchButton');
         const controls = document.getElementById('controls');
 
-        const obstacleImage = new Image();
-        obstacleImage.src = 'Spiel/Spieler/Spieler.png';
+        const stoneImage = new Image();
+        stoneImage.src = 'Spiel/Ritter/Ritter.jpg';
+
+        const knightImage = new Image();
+        knightImage.src = 'Spiel/Ritter/Ritter.jpg';
+
+        const birdImage = new Image();
+        birdImage.src = 'Spieö/Greif/Greif.jpeg';
+
+        const playerImage = new Image();
+        playerImage.src = 'Spiel/Spieler/Spieler.png';
 
         let player = {
             x: 50,
@@ -89,27 +98,7 @@
             crouchHeight: 25,
             originalHeight: 50,
             draw() {
-                ctx.fillStyle = '#FFD700';
-                let height = this.crouching ? this.crouchHeight : this.height;
-                ctx.fillRect(this.x, this.y + (this.originalHeight - height), this.width, height);
-
-                ctx.fillStyle = '#FF8C00';
-                ctx.beginPath();
-                ctx.arc(this.x + this.width / 2, this.y, this.width / 2, 0, Math.PI * 2);
-                ctx.fill();
-
-                ctx.fillStyle = '#000';
-                ctx.beginPath();
-                ctx.arc(this.x + 15, this.y + 15, 3, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.beginPath();
-                ctx.arc(this.x + 35, this.y + 15, 3, 0, Math.PI * 2);
-                ctx.fill();
-
-                ctx.strokeStyle = '#000';
-                ctx.beginPath();
-                ctx.arc(this.x + this.width / 2, this.y + 30, 10, 0, Math.PI);
-                ctx.stroke();
+                ctx.drawImage(playerImage, this.x, this.y, this.width, this.height);
             },
             reset() {
                 this.x = 50;
@@ -160,15 +149,14 @@
         function drawPixelArt(ctx, x, y, width, height, type) {
             switch (type) {
                 case 'stone':
-                    ctx.drawImage(obstacleImage, x, y, width, height);
+                    ctx.drawImage(stoneImage, x, y, width, height);
                     break;
-                // Füge hier weitere cases für andere Hindernisse hinzu
-                // case 'knight':
-                //     ctx.drawImage(knightImage, x, y, width, height);
-                //     break;
-                // case 'bird':
-                //     ctx.drawImage(birdImage, x, y, width, height);
-                //     break;
+                case 'knight':
+                    ctx.drawImage(knightImage, x, y, width, height);
+                    break;
+                case 'bird':
+                    ctx.drawImage(birdImage, x, y, width, height);
+                    break;
             }
         }
 
@@ -314,9 +302,23 @@
         jumpButton.addEventListener('click', jump);
         crouchButton.addEventListener('click', crouch);
 
-        obstacleImage.onload = function() {
-            // Optional: Start the game or draw the obstacle after the image is loaded
-        };
+        const imagesLoaded = new Promise((resolve) => {
+            let loadedCount = 0;
+            const images = [stoneImage, knightImage, birdImage, playerImage];
+
+            images.forEach(image => {
+                image.onload = () => {
+                    loadedCount++;
+                    if (loadedCount === images.length) {
+                        resolve();
+                    }
+                };
+            });
+        });
+
+        imagesLoaded.then(() => {
+            // Starte das Spiel oder führe sonstige Initialisierungen durch
+        });
     </script>
 </body>
 </html>
