@@ -25,7 +25,6 @@
         canvas {
             border: 2px solid #333;
             display: none;
-            background: linear-gradient(to bottom, #87ceeb, #228b22);
             width: 100%;
             height: auto;
             max-width: 800px;
@@ -142,6 +141,31 @@
             }
         }
 
+        // Hintergrund für jedes Level
+        function drawBackground() {
+            switch (level) {
+                case 1:
+                    ctx.fillStyle = '#87ceeb'; // Himmelblau
+                    ctx.fillRect(0, 0, canvas.width, canvas.height / 2); // Oben (Himmel)
+                    ctx.fillStyle = '#228b22'; // Grasgrün
+                    ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2); // Unten (Gras)
+                    break;
+                case 2:
+                    ctx.fillStyle = '#ff4500'; // Roter Himmel
+                    ctx.fillRect(0, 0, canvas.width, canvas.height / 2); // Oben (Himmel)
+                    ctx.fillStyle = '#8b4513'; // Braunes Gras
+                    ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2); // Unten (Gras)
+                    break;
+                case 3:
+                    ctx.fillStyle = '#191970'; // Nachtblauer Himmel
+                    ctx.fillRect(0, 0, canvas.width, canvas.height / 2); // Oben (Himmel)
+                    ctx.fillStyle = '#2e8b57'; // Dunkelgrün
+                    ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2); // Unten (Gras)
+                    break;
+                // Füge hier weitere Level hinzu
+            }
+        }
+
         // Haupt-Update-Funktion
         let score = 0;
         let highScore = localStorage.getItem('highScore') ? parseInt(localStorage.getItem('highScore')) : 0;
@@ -149,11 +173,8 @@
         function update() {
             ctx.clearRect(0, 0, canvas.width, canvas.height); // Löscht nur das Canvas
 
-            // Hintergrund
-            ctx.fillStyle = '#87ceeb'; // Himmelblau
-            ctx.fillRect(0, 0, canvas.width, canvas.height / 2); // Oben (Himmel)
-            ctx.fillStyle = '#228b22'; // Grasgrün
-            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2); // Unten (Gras)
+            // Hintergrund für das aktuelle Level
+            drawBackground();
 
             // Spieler-Physik
             player.dy += player.gravity;
@@ -195,9 +216,6 @@
             if (score >= 10 * level) {
                 level++;
                 obstacleSpeed += 1; // Hindernisse werden schneller mit jedem Level
-                ctx.fillStyle = '#ff6347';
-                ctx.font = '20px Arial';
-                ctx.fillText(`Level: ${level}`, 10, 60);
             }
 
             // Punktestand und Highscore anzeigen
@@ -205,6 +223,7 @@
             ctx.font = '20px Arial';
             ctx.fillText(`Score: ${score}`, 10, 30);
             ctx.fillText(`High Score: ${highScore}`, 10, 60);
+            ctx.fillText(`Level: ${level}`, 10, 90);
         }
 
         // Reset-Funktion
