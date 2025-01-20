@@ -59,16 +59,16 @@
 
         // Bilder laden
         const stoneImage = new Image();
-        stoneImage.src = 'Spiel/Ritter/Ritter.png'; // Anpassen
+        stoneImage.src = 'path/to/stone.png'; // Anpassen
 
         const knightImage = new Image();
-        knightImage.src = 'Spiel/Ritter/Ritter.png'; // Anpassen
+        knightImage.src = 'path/to/knight.png'; // Anpassen
 
         const birdImage = new Image();
-        birdImage.src = 'Spiel/Greif/Greif.png'; // Anpassen
+        birdImage.src = 'path/to/bird.png'; // Anpassen
 
         const playerImage = new Image();
-        playerImage.src = 'Spiel/Spieler/Spieler.png'; // Anpassen
+        playerImage.src = 'path/to/player.png'; // Anpassen
 
         const imagesToLoad = [stoneImage, knightImage, birdImage, playerImage];
         let imagesLoaded = 0;
@@ -125,14 +125,15 @@
         }
 
         // Haupt-Update-Funktion
+        let score = 0;
         function update() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Löscht nur das Canvas
 
             // Hintergrund
-            ctx.fillStyle = '#87ceeb';
-            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
-            ctx.fillStyle = '#228b22';
-            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+            ctx.fillStyle = '#87ceeb'; // Himmelblau
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2); // Oben (Himmel)
+            ctx.fillStyle = '#228b22'; // Grasgrün
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2); // Unten (Gras)
 
             // Spieler-Physik
             player.dy += player.gravity;
@@ -166,8 +167,14 @@
 
                 if (obstacle.x + obstacle.width < 0) {
                     obstacles.splice(i, 1);
+                    score++; // Punkte für das Überstehen von Hindernissen
                 }
             }
+
+            // Punktestand anzeigen
+            ctx.fillStyle = '#333';
+            ctx.font = '20px Arial';
+            ctx.fillText(`Score: ${score}`, 10, 30);
         }
 
         // Reset-Funktion
@@ -175,6 +182,7 @@
             obstacles = [];
             player.y = 300;
             player.dy = 0;
+            score = 0;
         }
 
         // Spiel-Loop
