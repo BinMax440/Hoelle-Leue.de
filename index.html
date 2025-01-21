@@ -118,7 +118,7 @@
         const levelElement = document.getElementById('level');
 
         let highScore = 0;
-        let birdsEnabled = false;
+        let birdsEnabled = true;
         let stonesEnabled = true;
         let knightsEnabled = true;
         let score = 0;
@@ -198,6 +198,8 @@
 
             if (!tooClose) {
                 obstacles.push(newObstacle);
+                score++; // Update score when a new obstacle is created
+                updateScoreboard();
             }
         }
 
