@@ -56,7 +56,6 @@
         }
         #devControls {
             margin-top: 20px;
-            display: none;
             flex-direction: column;
             align-items: center;
         }
@@ -86,7 +85,7 @@
     <div id="devControls">
         <input type="password" id="devPassword" placeholder="Enter password">
         <button id="devLoginButton">Login</button>
-        <button id="toggleObstaclesButton">Toggle Obstacles</button>
+        <button id="toggleObstaclesButton" style="display:none;">Toggle Obstacles</button>
     </div>
     <script>
         const canvas = document.getElementById('gameCanvas');
@@ -309,7 +308,7 @@
         devLoginButton.addEventListener('click', () => {
             const password = devPassword.value;
             if (password === 'yourPasswordHere') {
-                devControls.style.display = 'flex';
+                toggleObstaclesButton.style.display = 'block';
             } else {
                 alert('Incorrect password!');
             }
