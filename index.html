@@ -292,9 +292,9 @@ function drawBackground(level, ctx, canvas) {
         case 1:
             // Himmel und Gras
             ctx.fillStyle = '#87ceeb'; // Himmelblau
-            ctx.fillRect(backgroundOffset, 0, canvas.width, canvas.height / 2); // Oben (Himmel)
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2); // Oben (Himmel)
             ctx.fillStyle = '#228b22'; // Grasgrün
-            ctx.fillRect(backgroundOffset, canvas.height / 2, canvas.width, canvas.height / 2); // Unten (Gras)
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2); // Unten (Gras)
 
             // Details
             drawCloud(ctx, 100 + backgroundOffset, 80, 40);
@@ -303,170 +303,72 @@ function drawBackground(level, ctx, canvas) {
             drawSun(ctx, 50 + backgroundOffset, 50, 40);
             break;
 
-        case 2:
-            ctx.fillStyle = '#ff4500'; // Roter Himmel
-            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
-            ctx.fillStyle = '#8b4513'; // Braunes Gras
-            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
-
-            drawCloud(ctx, 150, 100, 50);
-            drawMountain(ctx, 400, canvas.height / 2, 100, 150);
-            drawTree(ctx, 250, canvas.height / 2 - 60, 25, 120, 70);
-            break;
-
-        case 3:
-            ctx.fillStyle = '#191970'; // Nachtblauer Himmel
-            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
-            ctx.fillStyle = '#2e8b57'; // Dunkelgrünes Gras
-            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
-
-            drawStars(ctx, canvas, 50);
-            drawTree(ctx, 150, canvas.height / 2 - 40, 20, 80, 50);
-            break;
-
-        case 4:
-            ctx.fillStyle = '#32cd32'; // Grüner Himmel
-            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
-            ctx.fillStyle = '#8b4513'; // Braunes Gras
-            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
-
-            drawCloud(ctx, 200, 80, 50);
-            drawTree(ctx, 300, canvas.height / 2 - 70, 30, 100, 60);
-            drawSun(ctx, canvas.width - 50, 70, 30);
-            break;
-
-        case 5:
-            ctx.fillStyle = '#d2691e'; // Orange Himmel
-            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
-            ctx.fillStyle = '#9acd32'; // Gelbgrünes Gras
-            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
-
-            drawCloud(ctx, 100, 90, 40);
-            drawTree(ctx, 400, canvas.height / 2 - 50, 25, 100, 70);
-            drawMountain(ctx, 500, canvas.height / 2, 80, 120);
-            break;
-
-        case 6:
-            ctx.fillStyle = '#ff6347'; // Tomatenroter Himmel
-            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
-            ctx.fillStyle = '#32cd32'; // Hellgrünes Gras
-            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
-
-            drawTree(ctx, 250, canvas.height / 2 - 60, 30, 110, 70);
-            drawCloud(ctx, 150, 60, 30);
-            break;
-
-        case 7:
-            ctx.fillStyle = '#ff1493'; // Pinker Himmel
-            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
-            ctx.fillStyle = '#228b22'; // Dunkelgrünes Gras
-            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
-
-            drawCloud(ctx, 200, 90, 40);
-            drawTree(ctx, 350, canvas.height / 2 - 50, 20, 80, 50);
-            drawSun(ctx, canvas.width - 70, 80, 50);
-            break;
-
-        case 8:
-            ctx.fillStyle = '#0000ff'; // Blau Himmel
-            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
-            ctx.fillStyle = '#006400'; // Dunkelgrünes Gras
-            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
-
-            drawStars(ctx, canvas, 30);
-            drawMountain(ctx, 250, canvas.height / 2, 120, 180);
-            break;
-
-        case 9:
-            ctx.fillStyle = '#ff8c00'; // Oranger Himmel
-            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
-            ctx.fillStyle = '#556b2f'; // Olivgrünes Gras
-            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
-
-            drawCloud(ctx, 100, 50, 60);
-            drawTree(ctx, 200, canvas.height / 2 - 40, 30, 90, 50);
-            break;
-
-        case 10:
-            ctx.fillStyle = '#7fffd4'; // Aquamariner Himmel
-            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
-            ctx.fillStyle = '#6b8e23'; // Olivgrünes Gras
-            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
-
-            drawCloud(ctx, 250, 100, 50);
-            drawTree(ctx, 300, canvas.height / 2 - 60, 25, 110, 70);
-            drawSun(ctx, 80, 80, 30);
-            break;
-
-        case 11:
-            ctx.fillStyle = '#adff2f'; // Gelbgrüner Himmel
-            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
-            ctx.fillStyle = '#a52a2a'; // Braunes Gras
-            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
-
-            drawTree(ctx, 100, canvas.height / 2 - 60, 20, 80, 40);
-            drawCloud(ctx, 300, 80, 50);
-            break;
-
-        case 12:
-            ctx.fillStyle = '#f0e68c'; // Khaki Himmel
-            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
-            ctx.fillStyle = '#228b22'; // Grasgrün
-            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
-
-            drawCloud(ctx, 150, 50, 40);
-            drawTree(ctx, 400, canvas.height / 2 - 50, 20, 90, 50);
-            break;
-
-        case 13:
-            ctx.fillStyle = '#bc8f8f'; // Rosaroter Himmel
-            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
-            ctx.fillStyle = '#8b4513'; // Braunes Gras
-            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
-
-            drawTree(ctx, 300, canvas.height / 2 - 60, 25, 100, 60);
-            drawMountain(ctx, 500, canvas.height / 2, 100, 150);
-            break;
-
-        case 14:
-            ctx.fillStyle = '#7cfc00'; // Leuchtender grüner Himmel
-            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
-            ctx.fillStyle = '#a52a2a'; // Braunes Gras
-            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
-
-            drawCloud(ctx, 250, 70, 50);
-            drawTree(ctx, 150, canvas.height / 2 - 70, 20, 100, 40);
-            break;
-
-        case 15:
-            ctx.fillStyle = '#ffd700'; // Goldener Himmel
-            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
-            ctx.fillStyle = '#a52a2a'; // Braunes Gras
-            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
-
-            drawCloud(ctx, 350, 100, 40);
-            drawTree(ctx, 250, canvas.height / 2 - 60, 30, 100, 60);
-            break;
-
-        case 16:
-            ctx.fillStyle = '#6a5acd'; // Slate-blauer Himmel
-            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
-            ctx.fillStyle = '#228b22'; // Grasgrün
-            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
-
-            drawStars(ctx, canvas, 50);
-            drawTree(ctx, 200, canvas.height / 2 - 50, 20, 80, 40);
-            break;
+        // ...other cases...
 
         default:
             ctx.fillStyle = '#87ceeb'; // Standardhimmel
-            ctx.fillRect(backgroundOffset, 0, canvas.width, canvas.height / 2);
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
             ctx.fillStyle = '#228b22'; // Standardgras
-            ctx.fillRect(backgroundOffset, canvas.height / 2, canvas.width, canvas.height / 2);
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
             break;
     }
 
     ctx.restore();
+}
+
+function gameLoop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBackground(level, ctx, canvas);
+
+    player.dy += player.gravity;
+    player.y += player.dy;
+
+    if (player.y + player.height > canvas.height) {
+        player.y = canvas.height - player.height;
+        player.dy = 0;
+        player.grounded = true;
+    }
+
+    if (player.y < 0) {
+        player.y = 0;
+        player.dy = 0;
+    }
+
+    player.draw();
+    updateScoreboard();
+
+    for (let i = obstacles.length - 1; i >= 0; i--) {
+        let obstacle = obstacles[i];
+        obstacle.x -= obstacle.speed;
+        drawPixelArt(obstacle.x, obstacle.y, obstacle.width, obstacle.height, obstacle.type);
+
+        if (obstacle.x + obstacle.width < 0) {
+            obstacles.splice(i, 1);
+            score++;
+            updateScoreboard();
+        }
+
+        if (checkCollision(player, obstacle)) {
+            resetGame();
+            return;
+        }
+    }
+
+    if (Math.random() < 0.02) createObstacle();
+
+    if (score > 10 * level) {
+        level++;
+        obstacleSpeed += 0.5;
+        drawBackground(level, ctx, canvas);
+    }
+
+    backgroundOffset += obstacleSpeed * 0.5; // Move background at half the speed of obstacles
+
+    if (autoPlayEnabled) {
+        autoPlay();
+    }
+
+    requestAnimationFrame(gameLoop);
 }
 
         function gameLoop() {
