@@ -83,7 +83,7 @@
         <button id="crouchButton">Crouch</button>
     </div>
     <div id="devControls">
-        <input type="password" id="devPassword" placeholder="Enter password">
+        <input type="password" id="devPassword" placeholder="dev password hier!">
         <button id="devLoginButton">Login</button>
         <button id="toggleObstaclesButton" style="display:none;">Toggle Obstacles</button>
     </div>
@@ -307,10 +307,10 @@
 
         devLoginButton.addEventListener('click', () => {
             const password = devPassword.value;
-            if (password === 'yourPasswordHere') {
+            if (password === '50455045006!!!') {
                 toggleObstaclesButton.style.display = 'block';
             } else {
-                alert('Incorrect password!');
+                alert('Du Bist wohl kein dev!! geh weg und iss kekse🍪🍪🍪');
             }
         });
 
