@@ -262,11 +262,8 @@
 
                 if (obstacle.x + obstacle.width < 0) {
                     obstacles.splice(i, 1);
-                    // Erhöhe den Score nur, wenn das Hindernis überwunden wurde
-                    if (player.y + player.height < obstacle.y) {
-                        score++;
-                        updateScoreboard();
-                    }
+                    score++; // Erhöhe den Score nur, wenn das Hindernis überwunden wurde
+                    updateScoreboard();
                 }
 
                 if (checkCollision(player, obstacle)) {
