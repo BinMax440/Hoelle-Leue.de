@@ -282,20 +282,25 @@ function drawMountain(ctx, x, y, width, height) {
     ctx.fill();
 }
 
+let backgroundOffset = 0;
+
 function drawBackground(level, ctx, canvas) {
+    ctx.save();
+    ctx.translate(-backgroundOffset, 0);
+
     switch (level) {
         case 1:
             // Himmel und Gras
             ctx.fillStyle = '#87ceeb'; // Himmelblau
-            ctx.fillRect(0, 0, canvas.width, canvas.height / 2); // Oben (Himmel)
+            ctx.fillRect(backgroundOffset, 0, canvas.width, canvas.height / 2); // Oben (Himmel)
             ctx.fillStyle = '#228b22'; // Grasgrün
-            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2); // Unten (Gras)
+            ctx.fillRect(backgroundOffset, canvas.height / 2, canvas.width, canvas.height / 2); // Unten (Gras)
 
             // Details
-            drawCloud(ctx, 100, 80, 40);
-            drawCloud(ctx, 300, 50, 50);
-            drawTree(ctx, 200, canvas.height / 2 - 50, 20, 100, 50);
-            drawSun(ctx, 50, 50, 40);
+            drawCloud(ctx, 100 + backgroundOffset, 80, 40);
+            drawCloud(ctx, 300 + backgroundOffset, 50, 50);
+            drawTree(ctx, 200 + backgroundOffset, canvas.height / 2 - 50, 20, 100, 50);
+            drawSun(ctx, 50 + backgroundOffset, 50, 40);
             break;
 
         case 2:
@@ -455,11 +460,13 @@ function drawBackground(level, ctx, canvas) {
 
         default:
             ctx.fillStyle = '#87ceeb'; // Standardhimmel
-            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+            ctx.fillRect(backgroundOffset, 0, canvas.width, canvas.height / 2);
             ctx.fillStyle = '#228b22'; // Standardgras
-            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+            ctx.fillRect(backgroundOffset, canvas.height / 2, canvas.width, canvas.height / 2);
             break;
     }
+
+    ctx.restore();
 }
 
         function gameLoop() {
@@ -506,6 +513,8 @@ function drawBackground(level, ctx, canvas) {
                 obstacleSpeed += 0.5;
                 drawBackground(level, ctx, canvas);
             }
+
+            backgroundOffset += obstacleSpeed * 0.5; // Move background at half the speed of obstacles
 
             if (autoPlayEnabled) {
                 autoPlay();
