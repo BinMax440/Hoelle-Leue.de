@@ -88,6 +88,7 @@
         <button id="toggleBirdsButton" style="display:none;">Toggle Birds</button>
         <button id="toggleStonesButton" style="display:none;">Toggle Stones</button>
         <button id="toggleKnightsButton" style="display:none;">Toggle Knights</button>
+        <button id="autoPlayButton" style="display:none;">Auto Play</button>
         <input type="number" id="setScoreInput" placeholder="Set Score" style="display:none;">
         <button id="setScoreButton" style="display:none;">Set Score</button>
         <input type="number" id="setLevelInput" placeholder="Set Level" style="display:none;">
@@ -108,6 +109,7 @@
         const toggleBirdsButton = document.getElementById('toggleBirdsButton');
         const toggleStonesButton = document.getElementById('toggleStonesButton');
         const toggleKnightsButton = document.getElementById('toggleKnightsButton');
+        const autoPlayButton = document.getElementById('autoPlayButton');
         const setScoreInput = document.getElementById('setScoreInput');
         const setScoreButton = document.getElementById('setScoreButton');
         const setLevelInput = document.getElementById('setLevelInput');
@@ -124,6 +126,7 @@
         let score = 0;
         let level = 1;
         let obstacleSpeed = 5;
+        let autoPlayEnabled = false;
 
         const playerImage = new Image();
         playerImage.src = 'Spiel/Spieler/Spieler.png';
@@ -280,6 +283,10 @@
                 drawBackground(level, ctx, canvas);
             }
 
+            if (autoPlayEnabled) {
+                autoPlay();
+            }
+
             requestAnimationFrame(gameLoop);
         }
 
@@ -293,6 +300,17 @@
             obstacleSpeed = 5;
             updateScoreboard();
             gameLoop();
+        }
+
+        function autoPlay() {
+            // Simple auto play logic: Jump if close to an obstacle
+            if (obstacles.length > 0) {
+                let obstacle = obstacles[0];
+                if (obstacle.x < player.x + player.width + 50 && player.grounded) {
+                    player.dy = player.jump;
+                    player.grounded = false;
+                }
+            }
         }
 
         startButton.addEventListener('click', () => {
@@ -323,6 +341,7 @@
                 toggleBirdsButton.style.display = 'block';
                 toggleStonesButton.style.display = 'block';
                 toggleKnightsButton.style.display = 'block';
+                autoPlayButton.style.display = 'block';
                 setScoreInput.style.display = 'block';
                 setScoreButton.style.display = 'block';
                 setLevelInput.style.display = 'block';
@@ -330,6 +349,11 @@
             } else {
                 alert('Du Bist wohl kein dev!! geh weg und iss kekse🍪🍪🍪');
             }
+        });
+
+        autoPlayButton.addEventListener('click', () => {
+            autoPlayEnabled = !autoPlayEnabled;
+            alert(`Auto Play is now ${autoPlayEnabled ? 'enabled' : 'disabled'}.`);
         });
 
         toggleBirdsButton.addEventListener('click', () => {
