@@ -198,8 +198,6 @@
 
             if (!tooClose) {
                 obstacles.push(newObstacle);
-                score++; // Update score when a new obstacle is created
-                updateScoreboard();
             }
         }
 
@@ -264,6 +262,11 @@
 
                 if (obstacle.x + obstacle.width < 0) {
                     obstacles.splice(i, 1);
+                    // Erhöhe den Score nur, wenn das Hindernis überwunden wurde
+                    if (player.y + player.height < obstacle.y) {
+                        score++;
+                        updateScoreboard();
+                    }
                 }
 
                 if (checkCollision(player, obstacle)) {
@@ -277,6 +280,7 @@
             if (score > 10 * level) {
                 level++;
                 obstacleSpeed += 0.5;
+                drawBackground(level, ctx, canvas);
             }
 
             requestAnimationFrame(gameLoop);
