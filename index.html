@@ -85,7 +85,13 @@
     <div id="devControls">
         <input type="password" id="devPassword" placeholder="dev password hier!">
         <button id="devLoginButton">Login</button>
-        <button id="toggleObstaclesButton" style="display:none;">Toggle Obstacles</button>
+        <button id="toggleBirdsButton" style="display:none;">Toggle Birds</button>
+        <button id="toggleStonesButton" style="display:none;">Toggle Stones</button>
+        <button id="toggleKnightsButton" style="display:none;">Toggle Knights</button>
+        <input type="number" id="setScoreInput" placeholder="Set Score" style="display:none;">
+        <button id="setScoreButton" style="display:none;">Set Score</button>
+        <input type="number" id="setLevelInput" placeholder="Set Level" style="display:none;">
+        <button id="setLevelButton" style="display:none;">Set Level</button>
     </div>
     <script>
         const canvas = document.getElementById('gameCanvas');
@@ -98,39 +104,50 @@
         const devControls = document.getElementById('devControls');
         const devPassword = document.getElementById('devPassword');
         const devLoginButton = document.getElementById('devLoginButton');
-        const toggleObstaclesButton = document.getElementById('toggleObstaclesButton');
+        const toggleBirdsButton = document.getElementById('toggleBirdsButton');
+        const toggleStonesButton = document.getElementById('toggleStonesButton');
+        const toggleKnightsButton = document.getElementById('toggleKnightsButton');
+        const setScoreInput = document.getElementById('setScoreInput');
+        const setScoreButton = document.getElementById('setScoreButton');
+        const setLevelInput = document.getElementById('setLevelInput');
+        const setLevelButton = document.getElementById('setLevelButton');
 
         const scoreElement = document.getElementById('score');
         const highScoreElement = document.getElementById('highScore');
         const levelElement = document.getElementById('level');
 
         let highScore = 0;
-        let obstaclesEnabled = true;
+        let birdsEnabled = true;
+        let stonesEnabled = true;
+        let knightsEnabled = true;
+        let score = 0;
+        let level = 1;
+        let obstacleSpeed = 5;
 
-        // Bilder laden
+        const playerImage = new Image();
+        playerImage.src = 'Spiel/Spieler/Spieler.png';
+
         const stoneImage = new Image();
         stoneImage.src = 'Spiel/Ritter/Ritter.png';
 
         const knightImage = new Image();
         knightImage.src = 'Spiel/Ritter/Ritter.png';
 
-        const playerImage = new Image();
-        playerImage.src = 'Spiel/Spieler/Spieler.png';
+        const birdImage = new Image();
+        birdImage.src = 'Spiel/Greif/Greif.png';
 
-        // Bilder sind geladen
         let imagesLoaded = 0;
-        const imagesToLoad = [stoneImage, knightImage, playerImage];
+        const imagesToLoad = [stoneImage, knightImage, birdImage, playerImage];
 
         imagesToLoad.forEach((image) => {
             image.onload = () => {
                 imagesLoaded++;
                 if (imagesLoaded === imagesToLoad.length) {
-                    startButton.disabled = false; // Aktiviert den Start-Button
+                    startButton.disabled = false;
                 }
             };
         });
 
-        // Spieler-Objekt
         let player = {
             x: 50,
             y: 300,
@@ -151,17 +168,20 @@
             }
         };
 
-        // Hindernis-Array
         let obstacles = [];
-        let level = 1;
-        let obstacleSpeed = 5;
-        let score = 0;
-        let lastScoreTime = 0;
 
         function createObstacle() {
-            if (!obstaclesEnabled) return;
             const size = Math.random() * 40 + 40;
-            let obstacleType = Math.random() > 0.5 ? 'stone' : 'knight';
+            let obstacleType;
+            if (stonesEnabled && Math.random() > 0.5) {
+                obstacleType = 'stone';
+            } else if (knightsEnabled) {
+                obstacleType = 'knight';
+            } else if (birdsEnabled) {
+                obstacleType = 'bird';
+            } else {
+                return;
+            }
             let newObstacle = {
                 x: canvas.width,
                 y: canvas.height - size,
@@ -172,7 +192,7 @@
             };
 
             let tooClose = obstacles.some((obstacle) => {
-                return Math.abs(obstacle.x - newObstacle.x) < 250; // Mindestabstand von 250px
+                return Math.abs(obstacle.x - newObstacle.x) < 250;
             });
 
             if (!tooClose) {
@@ -187,6 +207,9 @@
                     break;
                 case 'knight':
                     ctx.drawImage(knightImage, x, y, width, height);
+                    break;
+                case 'bird':
+                    ctx.drawImage(birdImage, x, y, width, height);
                     break;
             }
         }
@@ -205,20 +228,10 @@
         }
 
         function drawBackground(level, ctx, canvas) {
-            switch (level) {
-                case 1:
-                    ctx.fillStyle = '#87ceeb';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
-                    ctx.fillStyle = '#228b22';
-                    ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
-                    break;
-                default:
-                    ctx.fillStyle = '#87ceeb';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
-                    ctx.fillStyle = '#228b22';
-                    ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
-                    break;
-            }
+            ctx.fillStyle = '#87ceeb';
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+            ctx.fillStyle = '#228b22';
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
         }
 
         function gameLoop() {
@@ -248,11 +261,6 @@
 
                 if (obstacle.x + obstacle.width < 0) {
                     obstacles.splice(i, 1);
-                    let now = Date.now();
-                    if (now - lastScoreTime > 1000) {
-                        score += 1;
-                        lastScoreTime = now;
-                    }
                 }
 
                 if (checkCollision(player, obstacle)) {
@@ -308,23 +316,41 @@
         devLoginButton.addEventListener('click', () => {
             const password = devPassword.value;
             if (password === '50455045006!!!') {
-                toggleObstaclesButton.style.display = 'block';
+                toggleBirdsButton.style.display = 'block';
+                toggleStonesButton.style.display = 'block';
+                toggleKnightsButton.style.display = 'block';
+                setScoreInput.style.display = 'block';
+                setScoreButton.style.display = 'block';
+                setLevelInput.style.display = 'block';
+                setLevelButton.style.display = 'block';
             } else {
                 alert('Du Bist wohl kein dev!! geh weg und iss kekse🍪🍪🍪');
             }
         });
 
-        toggleObstaclesButton.addEventListener('click', () => {
-            obstaclesEnabled = !obstaclesEnabled;
-            alert(`Obstacles are now ${obstaclesEnabled ? 'enabled' : 'disabled'}.`);
+        toggleBirdsButton.addEventListener('click', () => {
+            birdsEnabled = !birdsEnabled;
+            alert(`Birds are now ${birdsEnabled ? 'enabled' : 'disabled'}.`);
         });
 
-        startButton.addEventListener('click', () => {
-            maintenanceMessage.style.display = 'none';
-            startButton.style.display = 'none';
-            canvas.style.display = 'block';
-            controls.style.display = 'flex';
-            gameLoop();
+        toggleStonesButton.addEventListener('click', () => {
+            stonesEnabled = !stonesEnabled;
+            alert(`Stones are now ${stonesEnabled ? 'enabled' : 'disabled'}.`);
+        });
+
+        toggleKnightsButton.addEventListener('click', () => {
+            knightsEnabled = !knightsEnabled;
+            alert(`Knights are now ${knightsEnabled ? 'enabled' : 'disabled'}.`);
+        });
+
+        setScoreButton.addEventListener('click', () => {
+            score = parseInt(setScoreInput.value);
+            updateScoreboard();
+        });
+
+        setLevelButton.addEventListener('click', () => {
+            level = parseInt(setLevelInput.value);
+            updateScoreboard();
         });
     </script>
 </body>
