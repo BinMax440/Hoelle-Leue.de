@@ -371,60 +371,6 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-        function gameLoop() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawBackground(level, ctx, canvas);
-            player.dy += player.gravity;
-            player.y += player.dy;
-
-            if (player.y + player.height > canvas.height) {
-                player.y = canvas.height - player.height;
-                player.dy = 0;
-                player.grounded = true;
-            }
-
-            if (player.y < 0) {
-                player.y = 0;
-                player.dy = 0;
-            }
-
-            player.draw();
-            updateScoreboard();
-
-            for (let i = obstacles.length - 1; i >= 0; i--) {
-                let obstacle = obstacles[i];
-                obstacle.x -= obstacle.speed;
-                drawPixelArt(obstacle.x, obstacle.y, obstacle.width, obstacle.height, obstacle.type);
-
-                if (obstacle.x + obstacle.width < 0) {
-                    obstacles.splice(i, 1);
-                    score++;
-                    updateScoreboard();
-                }
-
-                if (checkCollision(player, obstacle)) {
-                    resetGame();
-                    return;
-                }
-            }
-
-            if (Math.random() < 0.02) createObstacle();
-
-            if (score > 10 * level) {
-                level++;
-                obstacleSpeed += 0.5;
-                drawBackground(level, ctx, canvas);
-            }
-
-            backgroundOffset += obstacleSpeed * 0.5; // Move background at half the speed of obstacles
-
-            if (autoPlayEnabled) {
-                autoPlay();
-            }
-
-            requestAnimationFrame(gameLoop);
-        }
-
         function resetGame() {
             player.reset();
             if (score > highScore) {
