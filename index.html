@@ -304,6 +304,20 @@ function drawBackground(level, ctx, canvas) {
             drawMountain(ctx, 600, canvas.height / 2, 150, 300);
             break;
 
+        case 2:
+            // Nacht Himmel und Gras
+            ctx.fillStyle = '#000033'; // Dunkelblau
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2); // Oben (Himmel)
+            ctx.fillStyle = '#004400'; // Dunkelgrün
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2); // Unten (Gras)
+
+            // Details
+            drawStars(ctx, canvas, 50);
+            drawTree(ctx, 200, canvas.height / 2 - 50, 20, 100, 50);
+            drawMountain(ctx, 400, canvas.height / 2, 100, 200);
+            drawMountain(ctx, 600, canvas.height / 2, 150, 300);
+            break;
+
         // ...other cases...
 
         default:
@@ -360,7 +374,6 @@ function gameLoop() {
     if (score > 10 * level) {
         level++;
         obstacleSpeed += 0.5;
-        drawBackground(level, ctx, canvas);
     }
 
     if (autoPlayEnabled) {
