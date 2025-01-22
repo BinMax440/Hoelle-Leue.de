@@ -21,19 +21,21 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 100%;
+            height: 100%;
         }
         canvas {
             border: 2px solid #333;
-            display: none;
             width: 100%;
             height: auto;
             max-width: 800px;
         }
         #controls {
             margin-top: 20px;
-            display: none;
+            display: flex;
             justify-content: center;
             gap: 10px;
+            width: 100%;
         }
         button {
             padding: 10px 20px;
@@ -43,6 +45,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            flex: 1; /* Make buttons responsive */
         }
         button:hover {
             background-color: #2980b9;
@@ -71,7 +74,7 @@
             <p>Das Spiel ist noch in der Entwicklung.</p>
         </div>
         <button id="startButton">Start Game</button>
-        <canvas id="gameCanvas" width="800" height="400"></canvas>
+        <canvas id="gameCanvas" width="800" height="400" style="width: 100%; height: auto;"></canvas>
         <div id="scoreboard">
             <div>Score: <span id="score">0</span></div>
             <div>High Score: <span id="highScore">0</span></div>
@@ -161,14 +164,20 @@
             gravity: 0.5,
             jump: -15,
             grounded: false,
+            crouching: false, // Add crouching state
             draw() {
-                ctx.drawImage(playerImage, this.x, this.y, this.width, this.height);
+                if (this.crouching) {
+                    ctx.drawImage(playerImage, this.x, this.y + this.height / 2, this.width, this.height / 2);
+                } else {
+                    ctx.drawImage(playerImage, this.x, this.y, this.width, this.height);
+                }
             },
             reset() {
                 this.x = 50;
                 this.y = 300;
                 this.dy = 0;
                 this.grounded = true;
+                this.crouching = false; // Reset crouching state
             }
         };
 
@@ -382,6 +391,28 @@ function gameLoop() {
 
     requestAnimationFrame(gameLoop);
 }
+
+// Add touch controls for jumping and crouching
+canvas.addEventListener('touchstart', (e) => {
+    const touch = e.touches[0];
+    const touchX = touch.clientX;
+    const touchY = touch.clientY;
+
+    if (touchY < canvas.height / 2) {
+        // Jump if the touch is in the upper half of the canvas
+        if (player.grounded) {
+            player.dy = player.jump;
+            player.grounded = false;
+        }
+    } else {
+        // Crouch if the touch is in the lower half of the canvas
+        player.crouching = true;
+    }
+});
+
+canvas.addEventListener('touchend', (e) => {
+    player.crouching = false;
+});
 
         function resetGame() {
             player.reset();
