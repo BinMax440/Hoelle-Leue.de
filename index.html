@@ -286,7 +286,6 @@ let backgroundOffset = 0;
 
 function drawBackground(level, ctx, canvas) {
     ctx.save();
-    ctx.translate(-backgroundOffset, 0);
 
     switch (level) {
         case 1:
@@ -297,10 +296,12 @@ function drawBackground(level, ctx, canvas) {
             ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2); // Unten (Gras)
 
             // Details
-            drawCloud(ctx, 100 + backgroundOffset, 80, 40);
-            drawCloud(ctx, 300 + backgroundOffset, 50, 50);
-            drawTree(ctx, 200 + backgroundOffset, canvas.height / 2 - 50, 20, 100, 50);
-            drawSun(ctx, 50 + backgroundOffset, 50, 40);
+            drawCloud(ctx, 100, 80, 40);
+            drawCloud(ctx, 300, 50, 50);
+            drawTree(ctx, 200, canvas.height / 2 - 50, 20, 100, 50);
+            drawSun(ctx, 50, 50, 40);
+            drawMountain(ctx, 400, canvas.height / 2, 100, 200);
+            drawMountain(ctx, 600, canvas.height / 2, 150, 300);
             break;
 
         // ...other cases...
@@ -361,8 +362,6 @@ function gameLoop() {
         obstacleSpeed += 0.5;
         drawBackground(level, ctx, canvas);
     }
-
-    backgroundOffset += obstacleSpeed * 0.5; // Move background at half the speed of obstacles
 
     if (autoPlayEnabled) {
         autoPlay();
@@ -427,7 +426,7 @@ function gameLoop() {
                 setLevelInput.style.display = 'block';
                 setLevelButton.style.display = 'block';
             } else {
-                alert('Du Bist wohl kein dev!! geh weg und iss kekse🍪🍪🍪');
+                alert('Du Bist wohl kein dev!! Finger weg und iss kekse🍪🍪🍪');
             }
         });
 
