@@ -327,7 +327,263 @@ function drawBackground(level, ctx, canvas) {
             drawMountain(ctx, 600, canvas.height / 2, 150, 300);
             break;
 
-        // ...other cases...
+        case 3:
+            // Himmel und Gras mit mehr Details
+            ctx.fillStyle = '#87ceeb'; // Himmelblau
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2); // Oben (Himmel)
+            ctx.fillStyle = '#228b22'; // Grasgrün
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2); // Unten (Gras)
+
+            // Details
+            drawCloud(ctx, 150, 70, 40);
+            drawCloud(ctx, 350, 60, 50);
+            drawTree(ctx, 250, canvas.height / 2 - 50, 20, 100, 50);
+            drawSun(ctx, 70, 60, 40);
+            drawMountain(ctx, 450, canvas.height / 2, 100, 200);
+            drawMountain(ctx, 650, canvas.height / 2, 150, 300);
+            drawTree(ctx, 550, canvas.height / 2 - 50, 20, 100, 50);
+            break;
+
+        // Add more details for levels 4 to 20
+        case 4:
+            ctx.fillStyle = '#87ceeb';
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+            ctx.fillStyle = '#228b22';
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+            drawCloud(ctx, 200, 90, 40);
+            drawCloud(ctx, 400, 70, 50);
+            drawTree(ctx, 300, canvas.height / 2 - 50, 20, 100, 50);
+            drawSun(ctx, 90, 70, 40);
+            drawMountain(ctx, 500, canvas.height / 2, 100, 200);
+            drawMountain(ctx, 700, canvas.height / 2, 150, 300);
+            drawTree(ctx, 600, canvas.height / 2 - 50, 20, 100, 50);
+            break;
+
+        case 5:
+            ctx.fillStyle = '#87ceeb';
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+            ctx.fillStyle = '#228b22';
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+            drawCloud(ctx, 250, 100, 40);
+            drawCloud(ctx, 450, 80, 50);
+            drawTree(ctx, 350, canvas.height / 2 - 50, 20, 100, 50);
+            drawSun(ctx, 110, 80, 40);
+            drawMountain(ctx, 550, canvas.height / 2, 100, 200);
+            drawMountain(ctx, 750, canvas.height / 2, 150, 300);
+            drawTree(ctx, 650, canvas.height / 2 - 50, 20, 100, 50);
+            break;
+
+        // Continue adding more details for levels 6 to 20
+        case 6:
+            ctx.fillStyle = '#87ceeb';
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+            ctx.fillStyle = '#228b22';
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+            drawCloud(ctx, 300, 110, 40);
+            drawCloud(ctx, 500, 90, 50);
+            drawTree(ctx, 400, canvas.height / 2 - 50, 20, 100, 50);
+            drawSun(ctx, 130, 90, 40);
+            drawMountain(ctx, 600, canvas.height / 2, 100, 200);
+            drawMountain(ctx, 800, canvas.height / 2, 150, 300);
+            drawTree(ctx, 700, canvas.height / 2 - 50, 20, 100, 50);
+            break;
+
+        case 7:
+            ctx.fillStyle = '#87ceeb';
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+            ctx.fillStyle = '#228b22';
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+            drawCloud(ctx, 350, 120, 40);
+            drawCloud(ctx, 550, 100, 50);
+            drawTree(ctx, 450, canvas.height / 2 - 50, 20, 100, 50);
+            drawSun(ctx, 150, 100, 40);
+            drawMountain(ctx, 650, canvas.height / 2, 100, 200);
+            drawMountain(ctx, 850, canvas.height / 2, 150, 300);
+            drawTree(ctx, 750, canvas.height / 2 - 50, 20, 100, 50);
+            break;
+
+        case 8:
+            ctx.fillStyle = '#87ceeb';
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+            ctx.fillStyle = '#228b22';
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+            drawCloud(ctx, 400, 130, 40);
+            drawCloud(ctx, 600, 110, 50);
+            drawTree(ctx, 500, canvas.height / 2 - 50, 20, 100, 50);
+            drawSun(ctx, 170, 110, 40);
+            drawMountain(ctx, 700, canvas.height / 2, 100, 200);
+            drawMountain(ctx, 900, canvas.height / 2, 150, 300);
+            drawTree(ctx, 800, canvas.height / 2 - 50, 20, 100, 50);
+            break;
+
+        case 9:
+            ctx.fillStyle = '#87ceeb';
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+            ctx.fillStyle = '#228b22';
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+            drawCloud(ctx, 450, 140, 40);
+            drawCloud(ctx, 650, 120, 50);
+            drawTree(ctx, 550, canvas.height / 2 - 50, 20, 100, 50);
+            drawSun(ctx, 190, 120, 40);
+            drawMountain(ctx, 750, canvas.height / 2, 100, 200);
+            drawMountain(ctx, 950, canvas.height / 2, 150, 300);
+            drawTree(ctx, 850, canvas.height / 2 - 50, 20, 100, 50);
+            break;
+
+        case 10:
+            ctx.fillStyle = '#87ceeb';
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+            ctx.fillStyle = '#228b22';
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+            drawCloud(ctx, 500, 150, 40);
+            drawCloud(ctx, 700, 130, 50);
+            drawTree(ctx, 600, canvas.height / 2 - 50, 20, 100, 50);
+            drawSun(ctx, 210, 130, 40);
+            drawMountain(ctx, 800, canvas.height / 2, 100, 200);
+            drawMountain(ctx, 1000, canvas.height / 2, 150, 300);
+            drawTree(ctx, 900, canvas.height / 2 - 50, 20, 100, 50);
+            break;
+
+        // Continue adding more details for levels 11 to 20
+        case 11:
+            ctx.fillStyle = '#87ceeb';
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+            ctx.fillStyle = '#228b22';
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+            drawCloud(ctx, 550, 160, 40);
+            drawCloud(ctx, 750, 140, 50);
+            drawTree(ctx, 650, canvas.height / 2 - 50, 20, 100, 50);
+            drawSun(ctx, 230, 140, 40);
+            drawMountain(ctx, 850, canvas.height / 2, 100, 200);
+            drawMountain(ctx, 1050, canvas.height / 2, 150, 300);
+            drawTree(ctx, 950, canvas.height / 2 - 50, 20, 100, 50);
+            break;
+
+        case 12:
+            ctx.fillStyle = '#87ceeb';
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+            ctx.fillStyle = '#228b22';
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+            drawCloud(ctx, 600, 170, 40);
+            drawCloud(ctx, 800, 150, 50);
+            drawTree(ctx, 700, canvas.height / 2 - 50, 20, 100, 50);
+            drawSun(ctx, 250, 150, 40);
+            drawMountain(ctx, 900, canvas.height / 2, 100, 200);
+            drawMountain(ctx, 1100, canvas.height / 2, 150, 300);
+            drawTree(ctx, 1000, canvas.height / 2 - 50, 20, 100, 50);
+            break;
+
+        case 13:
+            ctx.fillStyle = '#87ceeb';
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+            ctx.fillStyle = '#228b22';
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+            drawCloud(ctx, 650, 180, 40);
+            drawCloud(ctx, 850, 160, 50);
+            drawTree(ctx, 750, canvas.height / 2 - 50, 20, 100, 50);
+            drawSun(ctx, 270, 160, 40);
+            drawMountain(ctx, 950, canvas.height / 2, 100, 200);
+            drawMountain(ctx, 1150, canvas.height / 2, 150, 300);
+            drawTree(ctx, 1050, canvas.height / 2 - 50, 20, 100, 50);
+            break;
+
+        case 14:
+            ctx.fillStyle = '#87ceeb';
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+            ctx.fillStyle = '#228b22';
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+            drawCloud(ctx, 700, 190, 40);
+            drawCloud(ctx, 900, 170, 50);
+            drawTree(ctx, 800, canvas.height / 2 - 50, 20, 100, 50);
+            drawSun(ctx, 290, 170, 40);
+            drawMountain(ctx, 1000, canvas.height / 2, 100, 200);
+            drawMountain(ctx, 1200, canvas.height / 2, 150, 300);
+            drawTree(ctx, 1100, canvas.height / 2 - 50, 20, 100, 50);
+            break;
+
+        case 15:
+            ctx.fillStyle = '#87ceeb';
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+            ctx.fillStyle = '#228b22';
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+            drawCloud(ctx, 750, 200, 40);
+            drawCloud(ctx, 950, 180, 50);
+            drawTree(ctx, 850, canvas.height / 2 - 50, 20, 100, 50);
+            drawSun(ctx, 310, 180, 40);
+            drawMountain(ctx, 1050, canvas.height / 2, 100, 200);
+            drawMountain(ctx, 1250, canvas.height / 2, 150, 300);
+            drawTree(ctx, 1150, canvas.height / 2 - 50, 20, 100, 50);
+            break;
+
+        case 16:
+            ctx.fillStyle = '#87ceeb';
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+            ctx.fillStyle = '#228b22';
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+            drawCloud(ctx, 800, 210, 40);
+            drawCloud(ctx, 1000, 190, 50);
+            drawTree(ctx, 900, canvas.height / 2 - 50, 20, 100, 50);
+            drawSun(ctx, 330, 190, 40);
+            drawMountain(ctx, 1100, canvas.height / 2, 100, 200);
+            drawMountain(ctx, 1300, canvas.height / 2, 150, 300);
+            drawTree(ctx, 1200, canvas.height / 2 - 50, 20, 100, 50);
+            break;
+
+        case 17:
+            ctx.fillStyle = '#87ceeb';
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+            ctx.fillStyle = '#228b22';
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+            drawCloud(ctx, 850, 220, 40);
+            drawCloud(ctx, 1050, 200, 50);
+            drawTree(ctx, 950, canvas.height / 2 - 50, 20, 100, 50);
+            drawSun(ctx, 350, 200, 40);
+            drawMountain(ctx, 1150, canvas.height / 2, 100, 200);
+            drawMountain(ctx, 1350, canvas.height / 2, 150, 300);
+            drawTree(ctx, 1250, canvas.height / 2 - 50, 20, 100, 50);
+            break;
+
+        case 18:
+            ctx.fillStyle = '#87ceeb';
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+            ctx.fillStyle = '#228b22';
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+            drawCloud(ctx, 900, 230, 40);
+            drawCloud(ctx, 1100, 210, 50);
+            drawTree(ctx, 1000, canvas.height / 2 - 50, 20, 100, 50);
+            drawSun(ctx, 370, 210, 40);
+            drawMountain(ctx, 1200, canvas.height / 2, 100, 200);
+            drawMountain(ctx, 1400, canvas.height / 2, 150, 300);
+            drawTree(ctx, 1300, canvas.height / 2 - 50, 20, 100, 50);
+            break;
+
+        case 19:
+            ctx.fillStyle = '#87ceeb';
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+            ctx.fillStyle = '#228b22';
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+            drawCloud(ctx, 950, 240, 40);
+            drawCloud(ctx, 1150, 220, 50);
+            drawTree(ctx, 1050, canvas.height / 2 - 50, 20, 100, 50);
+            drawSun(ctx, 390, 220, 40);
+            drawMountain(ctx, 1250, canvas.height / 2, 100, 200);
+            drawMountain(ctx, 1450, canvas.height / 2, 150, 300);
+            drawTree(ctx, 1350, canvas.height / 2 - 50, 20, 100, 50);
+            break;
+
+        case 20:
+            ctx.fillStyle = '#87ceeb';
+            ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+            ctx.fillStyle = '#228b22';
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+            drawCloud(ctx, 1000, 250, 40);
+            drawCloud(ctx, 1200, 230, 50);
+            drawTree(ctx, 1100, canvas.height / 2 - 50, 20, 100, 50);
+            drawSun(ctx, 410, 230, 40);
+            drawMountain(ctx, 1300, canvas.height / 2, 100, 200);
+            drawMountain(ctx, 1500, canvas.height / 2, 150, 300);
+            drawTree(ctx, 1400, canvas.height / 2 - 50, 20, 100, 50);
+            break;
 
         default:
             ctx.fillStyle = '#87ceeb'; // Standardhimmel
